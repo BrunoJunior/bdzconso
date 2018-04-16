@@ -1,0 +1,31 @@
+{% extends 'connected.html.twig' %}
+
+{% block title %}BDZConso{% endblock %}
+
+{% block main %}
+    <fieldset>
+        <legend>{% trans %}My vehicles{% endtrans %}</legend>
+        <ul>
+            {% for vehicle in vehicles %}
+                <li>{{ vehicle.manufacturer }} {{ vehicle.model }}</li>
+            {% endfor %}
+        </ul>
+    </fieldset>
+{% endblock %}
+
+{% block menu_elements %}
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-car"></i> {% trans %}My vehicles{% endtrans %}
+        </a>
+        <ul class="navbar-nav px-4">
+            {% for vehicle in vehicles %}
+                <li>
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-caret-right"></i> {{ vehicle.manufacturer }} {{ vehicle.model }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+{% endblock %}

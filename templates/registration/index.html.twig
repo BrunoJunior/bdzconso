@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Registration{% endtrans %}{% endblock %}
+
+{% block main %}
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form.firstname) }}</div>
+            <div class="col-md-6">{{ form_row(form.lastname) }}</div>
+        </div>
+        {{ form_row(form.email) }}
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form.password.first) }}</div>
+            <div class="col-md-6">{{ form_row(form.password.second) }}</div>
+        </div>
+        <button type="submit" class="btn btn-primary">{% trans %}Register{% endtrans %}</button>
+    {{ form_end(form) }}
+{% endblock %}
