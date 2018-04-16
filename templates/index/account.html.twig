@@ -5,27 +5,29 @@
 {% block main %}
     <fieldset>
         <legend>{% trans %}My vehicles{% endtrans %}</legend>
-        <ul>
+        <div class="row">
             {% for vehicle in vehicles %}
-                <li>{{ vehicle.manufacturer }} {{ vehicle.model }}</li>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ vehicle.manufacturer }} {{ vehicle.model }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ vehicle.year }}</h6>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a class="btn btn-primary" href="#" role="button"><i class="fas fa-edit"></i> {% trans %}Edit{% endtrans %}</a>
+                            <a class="btn btn-success" href="#" role="button"><i class="fas fa-battery-full"></i> {% trans %}New fueling{% endtrans %}</a>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{% trans %}New vehicle{% endtrans %}</h5>
+                        <p class="card-text">{% trans %}Add a vehicle to your list{% endtrans %}</p>
+                        <a class="btn btn-primary" href="#" role="button"><i class="fas fa-plus"></i> {% trans %}Create{% endtrans %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </fieldset>
-{% endblock %}
-
-{% block menu_elements %}
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-car"></i> {% trans %}My vehicles{% endtrans %}
-        </a>
-        <ul class="navbar-nav px-4">
-            {% for vehicle in vehicles %}
-                <li>
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-caret-right"></i> {{ vehicle.manufacturer }} {{ vehicle.model }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    </li>
 {% endblock %}
