@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Fueling;
 use App\Entity\Vehicle;
+use App\Form\FuelingType;
 use App\Form\VehicleType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +47,7 @@ class VehicleController extends Controller
     /**
      * @param Vehicle $vehicle
      * @return Response
-     * @Route("/vehicle/delete/{id}", name="delete_vehicle")
+     * @Route("/vehicle/{id}/delete", name="delete_vehicle")
      * @throws AccessDeniedException
      */
     public function delete(Vehicle $vehicle) {
@@ -58,5 +60,37 @@ class VehicleController extends Controller
         $em->remove($vehicle);
         $em->flush();
         return $this->redirectToRoute('my_account');
+    }
+
+    /**
+     * @param Request $request
+     * @param Vehicle $vehicle
+     * @return Response
+     * @Route("/vehicle/{id}/refill", name="refill_vehicle")
+     * @throws AccessDeniedException
+     */
+    public function refill(Request $request, Vehicle $vehicle) {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        if ($this->getUser()->getId() !== $vehicle->getUser()->getId()) {
+            throw $this->createAccessDeniedException();
+        }
+        $fueling = new Fueling();
+        $fueling->setDate(new \DateTime());
+        $form = $this->createForm(FuelingType::class, $fueling);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $fueling->setVehicle($vehicle);
+            // On enregistre le véhicule dans la base
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($fueling);
+            $em->flush();
+
+            return $this->redirectToRoute('my_account');
+        }
+
+        return $this->render('vehicle/fueling.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }

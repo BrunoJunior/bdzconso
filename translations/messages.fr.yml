@@ -26,3 +26,14 @@ Model: Modèle
 Year: Année
 'Compatible fuels': 'Carburants compatibles'
 Save: Enregistrer
+Date: Date
+Month: Mois
+Day: Jour
+Hour: Heure
+Minute: Minute
+'Fuel type': 'Type de carburant'
+'Volume price': 'Prix au litre'
+Amount: Montant
+Volume: Volume
+'Traveled distance': 'Distance parcourue'
+'Showed consumption': 'Consommation affichée'

@@ -65,6 +65,7 @@ class Fueling
     /**
      * Showed consumption in liter / hectometer
      * @var integer
+     * @ORM\Column(type="integer")
      */
     private $showedConsumption;
 
@@ -76,7 +77,7 @@ class Fueling
     /**
      * @return Vehicle
      */
-    public function getVehicle(): Vehicle
+    public function getVehicle(): ?Vehicle
     {
         return $this->vehicle;
     }
@@ -94,7 +95,7 @@ class Fueling
     /**
      * @return \DateTime
      */
-    public function getDate(): \DateTime
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
@@ -112,7 +113,7 @@ class Fueling
     /**
      * @return FuelType
      */
-    public function getFuelType(): FuelType
+    public function getFuelType(): ?FuelType
     {
         return $this->fuelType;
     }
@@ -131,7 +132,7 @@ class Fueling
      * Volume in milliliter
      * @return int
      */
-    public function getVolume(): int
+    public function getVolume(): ?int
     {
         return $this->volume;
     }
@@ -149,7 +150,7 @@ class Fueling
     /**
      * @return int
      */
-    public function getVolumePrice(): int
+    public function getVolumePrice(): ?int
     {
         return $this->volumePrice;
     }
@@ -167,7 +168,7 @@ class Fueling
     /**
      * @return int
      */
-    public function getAmount(): int
+    public function getAmount(): ?int
     {
         return $this->amount;
     }
@@ -185,7 +186,7 @@ class Fueling
     /**
      * @return int
      */
-    public function getTraveledDistance(): int
+    public function getTraveledDistance(): ?int
     {
         return $this->traveledDistance;
     }
@@ -203,7 +204,7 @@ class Fueling
     /**
      * @return int
      */
-    public function getShowedConsumption(): int
+    public function getShowedConsumption(): ?int
     {
         return $this->showedConsumption;
     }

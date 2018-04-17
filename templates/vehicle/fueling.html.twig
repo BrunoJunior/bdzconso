@@ -1,0 +1,27 @@
+{% extends 'connected.html.twig' %}
+
+{% block title %}
+        {% trans %}New fueling{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block main %}
+    {{ form_start(form) }}
+        {{ form_row(form.date) }}
+        <div class="row">
+            <div class="col-md-4">{{ form_row(form.fuelType) }}</div>
+            <div class="col-md-4">{{ form_row(form.volumePrice) }}</div>
+            <div class="col-md-4">{{ form_row(form.amount) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">{{ form_row(form.volume) }}</div>
+            <div class="col-md-4">{{ form_row(form.traveledDistance) }}</div>
+            <div class="col-md-4">{{ form_row(form.showedConsumption) }}</div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+                {% trans %}Create{% endtrans %}
+        </button>
+    {{ form_end(form) }}
+{% endblock %}
