@@ -21,6 +21,7 @@ class VehicleFixtures extends Fixture implements DependentFixtureInterface
                 $vehicle->addCompatibleFuel($this->getReference($fuelType));
             }
             $manager->persist($vehicle);
+            $this->addReference($data[3] . '_' . $data[0] . ' ' . $data[1], $vehicle);
         }
         $manager->flush();
     }

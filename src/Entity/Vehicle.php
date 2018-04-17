@@ -176,4 +176,35 @@ class Vehicle
         return $this->fuelings;
     }
 
+    /**
+     * The average consumption in l/100km
+     * @return float|null
+     */
+    public function getAvgConsumption(): ?float
+    {
+        $volume = $distance = 0;
+        foreach ($this->getFuelings() as $fueling) {
+            $volume += $fueling->getVolume(); // in ml (0.001 l)
+            $distance += $fueling->getTraveledDistance(); // in hm (0.1 km)
+        }
+        if ($distance === 0) {
+            return null;
+        }
+        // waited l/100km
+        return $volume / $distance;
+    }
+
+    /**
+     * The total traveled distance for the vehicle
+     * @return float
+     */
+    public function getTotalTraveledDistance(): float {
+        $distance = 0;
+        foreach ($this->getFuelings() as $fueling) {
+            $distance += $fueling->getTraveledDistance(); // in hm (0.1 km)
+        }
+        // Waited km
+        return $distance / 10;
+    }
+
 }

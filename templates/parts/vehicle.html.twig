@@ -1,0 +1,15 @@
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ vehicle.manufacturer }} {{ vehicle.model }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ vehicle.year }}</h6>
+        <p class="card-text">{% trans %}Average consumption:{% endtrans %} {% if vehicle.avgConsumption %}{{ vehicle.avgConsumption|number_format(2, ',', '') }}{% else %}--{% endif %} l/100km</p>
+        <p class="card-text">{% trans %}Traveled distance:{% endtrans %} {{ vehicle.totalTraveledDistance|number_format(2, ',', '') }}km</p>
+        <p class="card-text">{% trans %}Compatible fuels:{% endtrans %}
+            {% for fuel in vehicle.compatibleFuels %}
+                {{ include('parts/fuel.html.twig', { 'fuel': fuel }) }}
+            {% endfor %}
+        </p>
+        <a class="btn btn-primary" href="#" role="button"><i class="fas fa-edit"></i> {% trans %}Edit{% endtrans %}</a>
+        <a class="btn btn-success" href="#" role="button"><i class="fas fa-battery-full"></i> {% trans %}New fueling{% endtrans %}</a>
+    </div>
+</div>

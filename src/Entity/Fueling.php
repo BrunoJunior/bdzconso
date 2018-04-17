@@ -35,9 +35,9 @@ class Fueling
     private $fuelType;
 
     /**
-     * Volume in liter
-     * @var float
-     * @ORM\Column(type="float")
+     * Volume in milliliter
+     * @var integer
+     * @ORM\Column(type="integer")
      */
     private $volume;
 
@@ -128,18 +128,19 @@ class Fueling
     }
 
     /**
-     * @return float
+     * Volume in milliliter
+     * @return int
      */
-    public function getVolume(): float
+    public function getVolume(): int
     {
         return $this->volume;
     }
 
     /**
-     * @param float $volume
+     * @param int $volume
      * @return Fueling
      */
-    public function setVolume(float $volume): Fueling
+    public function setVolume(int $volume): Fueling
     {
         $this->volume = $volume;
         return $this;
