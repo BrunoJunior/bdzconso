@@ -1,0 +1,13 @@
+.card-body {
+    position: relative;
+}
+
+.card-body .card-actions {
+    position: absolute;
+    right: 1.25rem;
+    top: 1.25rem;
+}
+
+.card-body .card-actions .btn {
+    font-size: .7rem;
+}

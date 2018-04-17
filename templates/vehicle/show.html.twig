@@ -1,0 +1,31 @@
+{% extends 'connected.html.twig' %}
+
+{% block title %}
+    {% if new %}
+        {% trans %}New vehicle{% endtrans %}
+    {% else %}
+        {% trans %}Vehicle edition{% endtrans %}
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/vehicle.css') }}">
+{% endblock %}
+
+{% block main %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-4">{{ form_row(form.manufacturer) }}</div>
+        <div class="col-md-4">{{ form_row(form.model) }}</div>
+        <div class="col-md-4">{{ form_row(form.year) }}</div>
+    </div>
+    {{ form_row(form.compatibleFuels) }}
+    <button type="submit" class="btn btn-primary">
+        {% if new %}
+            {% trans %}Create{% endtrans %}
+        {% else %}
+            {% trans %}Save{% endtrans %}
+        {% endif %}
+    </button>
+    {{ form_end(form) }}
+{% endblock %}

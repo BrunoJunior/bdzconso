@@ -1,6 +1,12 @@
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">{{ vehicle.manufacturer }} {{ vehicle.model }}</h5>
+        <h5 class="card-title">
+            {{ vehicle.manufacturer }} {{ vehicle.model }}
+        </h5>
+        <div class="card-actions">
+            <a class="btn btn-primary btn-sm" href="{{ path('vehicle', {'id': vehicle.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
+            <a class="btn btn-danger btn-sm" href="{{ path('delete_vehicle', {'id': vehicle.id}) }}" role="button"><i class="fas fa-trash"></i> </a>
+        </div>
         <h6 class="card-subtitle mb-2 text-muted">{{ vehicle.year }}</h6>
         <p class="card-text">{% trans %}Average consumption:{% endtrans %} {% if vehicle.avgConsumption %}{{ vehicle.avgConsumption|number_format(2, ',', '') }}{% else %}--{% endif %} l/100km</p>
         <p class="card-text">{% trans %}Traveled distance:{% endtrans %} {{ vehicle.totalTraveledDistance|number_format(2, ',', '') }}km</p>
@@ -9,7 +15,8 @@
                 {{ include('parts/fuel.html.twig', { 'fuel': fuel }) }}
             {% endfor %}
         </p>
-        <a class="btn btn-primary" href="#" role="button"><i class="fas fa-edit"></i> {% trans %}Edit{% endtrans %}</a>
+    </div>
+    <div class="card-footer text-center">
         <a class="btn btn-success" href="#" role="button"><i class="fas fa-battery-full"></i> {% trans %}New fueling{% endtrans %}</a>
     </div>
 </div>

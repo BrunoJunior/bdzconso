@@ -79,7 +79,7 @@ class Vehicle
     /**
      * @return string
      */
-    public function getManufacturer(): string
+    public function getManufacturer(): ?string
     {
         return $this->manufacturer;
     }
@@ -97,7 +97,7 @@ class Vehicle
     /**
      * @return string
      */
-    public function getModel(): string
+    public function getModel(): ?string
     {
         return $this->model;
     }
@@ -115,7 +115,7 @@ class Vehicle
     /**
      * @return int
      */
-    public function getYear(): int
+    public function getYear(): ?int
     {
         return $this->year;
     }
@@ -133,7 +133,7 @@ class Vehicle
     /**
      * @return User
      */
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
