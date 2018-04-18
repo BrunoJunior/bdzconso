@@ -6,6 +6,7 @@ use App\Entity\Fueling;
 use App\Entity\FuelType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -38,6 +39,27 @@ class FuelingType extends AbstractType
                 'choice_label' => 'name'
             ])
         ;
+        $builder->get('volume')->addModelTransformer(static::getCallbackTransformerRatio(1000));
+        $builder->get('traveledDistance')->addModelTransformer(static::getCallbackTransformerRatio(10));
+        $builder->get('showedConsumption')->addModelTransformer(static::getCallbackTransformerRatio(10));
+    }
+
+    /**
+     * Ratio transformer
+     * @param $ratio
+     * @return CallbackTransformer
+     */
+    private static function getCallbackTransformerRatio(int $ratio): CallbackTransformer {
+        return new CallbackTransformer(
+            function ($value) use($ratio) {
+                // divide the value by the ratio
+                return $value / $ratio;
+            },
+            function ($value) use($ratio) {
+                // multiply the value by the ratio
+                return (int) ($value * $ratio);
+            }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)

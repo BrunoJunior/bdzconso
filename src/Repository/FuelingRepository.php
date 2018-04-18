@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Fueling;
+use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -17,6 +18,40 @@ class FuelingRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Fueling::class);
+    }
+
+    /**
+     * Get Fuelings for a vehicle order by descending dates
+     * @param Vehicle $vehicle
+     * @param int $pageNumber
+     * @param int $maxByPage
+     * @return Fueling[]
+     */
+    public function findByVehicle(Vehicle $vehicle, $pageNumber = 1, $maxByPage = 10) {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.vehicle = :val')
+            ->setParameter('val', $vehicle)
+            ->orderBy('f.date', 'DESC')
+            ->setFirstResult(($pageNumber - 1) * $maxByPage)
+            ->setMaxResults($maxByPage)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * Count the number of fuelings for a vehicle
+     * @param Vehicle $vehicle
+     * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countByVehicle(Vehicle $vehicle):int {
+        return $this->createQueryBuilder('f')
+            ->select('COUNT(f)')
+            ->andWhere('f.vehicle = :val')
+            ->setParameter('val', $vehicle)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 //    /**

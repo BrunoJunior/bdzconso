@@ -5,7 +5,7 @@
         </h5>
         <div class="card-actions">
             <a class="btn btn-primary btn-sm" href="{{ path('vehicle', {'id': vehicle.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
-            <a class="btn btn-danger btn-sm" href="{{ path('delete_vehicle', {'id': vehicle.id}) }}" role="button"><i class="fas fa-trash"></i> </a>
+            <a class="btn btn-danger btn-sm" href="{{ path('delete_vehicle', {'id': vehicle.id}) }}" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>
         </div>
         <h6 class="card-subtitle mb-2 text-muted">{{ vehicle.year }}</h6>
         <p class="card-text">{% trans %}Average consumption:{% endtrans %} {% if vehicle.avgConsumption %}{{ vehicle.avgConsumption|number_format(2, ',', '') }}{% else %}--{% endif %} l/100km</p>

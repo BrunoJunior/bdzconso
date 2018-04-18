@@ -27,22 +27,47 @@
             <div class="row{% if not is_granted('IS_AUTHENTICATED_FULLY') %} justify-content-center{% endif %}">
                 {% block menu %}{% endblock %}
 
-                <main role="main" class="
+                <main id="main" role="main" class="
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     col-md-9 ml-sm-auto col-lg-10 px-4
                 {% else %}
                     col-md-10 col-lg-8
                 {% endif %}
                 ">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <div class="title d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                         <h1 class="h2">{{ block('title') }}</h1>
+                        <div class="actions">{% block title_actions %}{% endblock %}</div>
                     </div>
                     {% block main %}{% endblock %}
                 </main>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="{% trans %}Confirmation{% endtrans %}" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">{% trans %}Confirmation{% endtrans %}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{% trans %}Close{% endtrans %}">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="confirmationMessage" data-default="{% trans %}Are you sure?{% endtrans %}">{% trans %}Are you sure?{% endtrans %}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="confirmModalNo">{% trans %}No{% endtrans %}</button>
+                        <a class="btn btn-primary" href="#" id="confirmModalYes">{% trans %}Yes{% endtrans %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('js/main.js') }}"></script>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

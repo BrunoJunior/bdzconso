@@ -17,7 +17,11 @@ class VehicleController extends Controller
      * @param Request $request
      * @param Vehicle $vehicle
      * @return Response
-     * @Route("/vehicle/{id}", name="vehicle", defaults={"id"= 0})
+     * @Route("/vehicle/{id}", name="vehicle",
+     *     defaults={"id"= 0},
+     *     requirements={
+     *         "id": "\d+"
+     *     })
      */
     public function show(Request $request, Vehicle $vehicle = null)
     {
@@ -47,7 +51,10 @@ class VehicleController extends Controller
     /**
      * @param Vehicle $vehicle
      * @return Response
-     * @Route("/vehicle/{id}/delete", name="delete_vehicle")
+     * @Route("/vehicle/{id}/delete", name="delete_vehicle",
+     *     requirements={
+     *         "id": "\d+"
+     *     })
      * @throws AccessDeniedException
      */
     public function delete(Vehicle $vehicle) {
@@ -66,7 +73,10 @@ class VehicleController extends Controller
      * @param Request $request
      * @param Vehicle $vehicle
      * @return Response
-     * @Route("/vehicle/{id}/refill", name="refill_vehicle")
+     * @Route("/vehicle/{id}/refill", name="refill_vehicle",
+     *     requirements={
+     *         "id": "\d+"
+     *     })
      * @throws AccessDeniedException
      */
     public function refill(Request $request, Vehicle $vehicle) {
@@ -97,13 +107,24 @@ class VehicleController extends Controller
     /**
      * @param Request $request
      * @param Vehicle $vehicle
+     * @param int $page
      * @return Response
-     * @Route("/vehicle/{id}/fuelings", name="vehicle_fuelings")
-     * @throws AccessDeniedException
+     * @Route("/vehicle/{id}/fuelings/{page}", name="vehicle_fuelings",
+     *     requirements={
+     *         "id": "\d+",
+     *         "page": "\d+"
+     *     })
+     * @throws AccessDeniedException|\Doctrine\ORM\NonUniqueResultException
      */
-    public function fuelings(Request $request, Vehicle $vehicle) {
+    public function fuelings(Request $request, Vehicle $vehicle, int $page = 1) {
+        $nbMax = 10;
+        $repository = $this->getDoctrine()->getRepository(Fueling::class);
+        $nbPages = (int) ceil(count($repository->countByVehicle($vehicle)) / 10);
         return $this->render('vehicle/fuelings_list.html.twig', [
-            'fuelings' => $vehicle->getFuelings()
+            'vehicleId' => $vehicle->getId(),
+            'fuelings' => $repository->findByVehicle($vehicle, $page, $nbMax),
+            'page' => $page,
+            'nbPages' => $nbPages
         ]);
     }
 }

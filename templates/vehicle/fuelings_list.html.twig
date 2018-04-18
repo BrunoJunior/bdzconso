@@ -4,6 +4,10 @@
     {% trans %}Fuelings{% endtrans %}
 {% endblock %}
 
+{% block title_actions %}
+    <a class="btn btn-primary" href="{{ path('refill_vehicle', {'id': vehicleId}) }}" role="button"><i class="fas fa-plus"></i> {% trans %}Add{% endtrans %}</a>
+{% endblock %}
+
 {% block stylesheets %}
 {% endblock %}
 
@@ -25,13 +29,33 @@
             <tr>
                 <td>{{ fueling.date|date("d/m/Y") }}</td>
                 <td>{{ include('parts/fuel.html.twig', { 'fuel': fueling.fuelType }) }}</td>
-                <td>{{ fueling.volume }}</td>
-                <td>{{ fueling.volumePrice }}</td>
-                <td>{{ fueling.amount }}</td>
-                <td>{{ fueling.traveledDistance }}</td>
-                <td>{{ fueling.showedConsumption }}</td>
+                <td>{{ (fueling.volume / 1000)|number_format(2,',','') }} l</td>
+                <td>{{ (fueling.volumePrice / 1000)|number_format(3,',','') }} €/l</td>
+                <td>{{ (fueling.amount / 100)|number_format(2,',','') }} €</td>
+                <td>{{ (fueling.traveledDistance / 10)|number_format(1,',','') }} km</td>
+                <td>{{ (fueling.showedConsumption / 10)|number_format(1,',','') }} l/100km</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    <nav aria-label="Fueling pagination">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {% if page < 2 %}disabled{% endif %}">
+                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': page - 1}) }}" tabindex="-1">{% trans %}Previous{% endtrans %}</a>
+            </li>
+            {% for i in 1..nbPages %}
+                <li class="page-item {% if page == i %}active{% endif %}">
+                    {% if page == i %}
+                        <span class="page-link">{{ i }}<span class="sr-only">({% trans %}current{% endtrans %})</span></span>
+                    {% else %}
+                        <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': i}) }}">{{ i }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            <li class="page-item {% if page == nbPages %}disabled{% endif %}">
+                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': page + 1}) }}">{% trans %}Next{% endtrans %}</a>
+            </li>
+        </ul>
+    </nav>
 {% endblock %}
