@@ -35,7 +35,8 @@ class FuelingController extends Controller
 
         return $this->render('fueling/edit.html.twig', [
             'form' => $form->createView(),
-            'new' => false
+            'new' => false,
+            'defaultFuelType' => $fueling->getFuelType()
         ]);
     }
 

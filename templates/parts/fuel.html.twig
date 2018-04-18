@@ -1,8 +1,6 @@
 {% set type = 'primary' %}
-{% if fuel.name is same as('SP95') or fuel.name is same as('SP95-E10') %}
+{% if prefered %}
     {% set type = 'success' %}
-{% elseif fuel.name is same as('Diesel')  %}
-    {% set type = 'warning' %}
 {% endif %}
 
 <span class="badge badge-pill badge-{{ type }}">{{ fuel.name }}</span>

@@ -61,6 +61,13 @@ class Vehicle
     private $fuelings;
 
     /**
+     * @var FuelType
+     * @ORM\ManyToOne(targetEntity="App\Entity\FuelType")
+     * @ORM\JoinColumn(name="prefered_fuel_type_id", referencedColumnName="id", nullable=true)
+     */
+    private $preferedFuelType;
+
+    /**
      * Vehicle constructor.
      */
     public function __construct() {
@@ -205,6 +212,24 @@ class Vehicle
         }
         // Waited km
         return $distance / 10;
+    }
+
+    /**
+     * @return FuelType
+     */
+    public function getPreferedFuelType(): ?FuelType
+    {
+        return $this->preferedFuelType;
+    }
+
+    /**
+     * @param FuelType $preferedFuelType
+     * @return Vehicle
+     */
+    public function setPreferedFuelType(FuelType $preferedFuelType = null): Vehicle
+    {
+        $this->preferedFuelType = $preferedFuelType;
+        return $this;
     }
 
 }

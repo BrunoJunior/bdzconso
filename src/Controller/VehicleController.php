@@ -101,7 +101,8 @@ class VehicleController extends Controller
 
         return $this->render('fueling/edit.html.twig', [
             'form' => $form->createView(),
-            'new' => true
+            'new' => true,
+            'defaultFuelType' => $vehicle->getPreferedFuelType()
         ]);
     }
 
