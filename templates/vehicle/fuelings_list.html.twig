@@ -22,6 +22,7 @@
             <th scope="col">{% trans %}Amount{% endtrans %}</th>
             <th scope="col">{% trans %}Traveled distance{% endtrans %}</th>
             <th scope="col">{% trans %}Showed consumption{% endtrans %}</th>
+            <th scope="col">{% trans %}Actions{% endtrans %}</th>
         </tr>
         </thead>
         <tbody>
@@ -34,6 +35,10 @@
                 <td>{{ (fueling.amount / 100)|number_format(2,',','') }} €</td>
                 <td>{{ (fueling.traveledDistance / 10)|number_format(1,',','') }} km</td>
                 <td>{{ (fueling.showedConsumption / 10)|number_format(1,',','') }} l/100km</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="{{ path('fueling', {'id': fueling.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
+                    <a class="btn btn-danger btn-sm" href="{{ path('delete_fueling', {'id': fueling.id}) }}" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

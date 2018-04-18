@@ -23,7 +23,7 @@ class VehicleController extends Controller
      *         "id": "\d+"
      *     })
      */
-    public function show(Request $request, Vehicle $vehicle = null)
+    public function edit(Request $request, Vehicle $vehicle = null)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         if ($vehicle === null) {
@@ -42,7 +42,7 @@ class VehicleController extends Controller
             return $this->redirectToRoute('my_account');
         }
 
-        return $this->render('vehicle/show.html.twig', [
+        return $this->render('vehicle/edit.html.twig', [
             'form' => $form->createView(),
             'new' => $vehicle->getId() == 0
         ]);
@@ -99,8 +99,9 @@ class VehicleController extends Controller
             return $this->redirectToRoute('my_account');
         }
 
-        return $this->render('vehicle/fueling.html.twig', [
-            'form' => $form->createView()
+        return $this->render('fueling/edit.html.twig', [
+            'form' => $form->createView(),
+            'new' => true
         ]);
     }
 
