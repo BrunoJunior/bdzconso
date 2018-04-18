@@ -18,5 +18,6 @@
     </div>
     <div class="card-footer text-center">
         <a class="btn btn-success" href="{{ path('refill_vehicle', {'id': vehicle.id}) }}" role="button"><i class="fas fa-battery-full"></i> {% trans %}New fueling{% endtrans %}</a>
+        <a class="btn btn-info" href="{{ path('vehicle_fuelings', {'id': vehicle.id}) }}" role="button"><i class="fas fa-list"></i> {% trans %}Fuelings{% endtrans %}</a>
     </div>
 </div>

@@ -93,4 +93,17 @@ class VehicleController extends Controller
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @param Vehicle $vehicle
+     * @return Response
+     * @Route("/vehicle/{id}/fuelings", name="vehicle_fuelings")
+     * @throws AccessDeniedException
+     */
+    public function fuelings(Request $request, Vehicle $vehicle) {
+        return $this->render('vehicle/fuelings_list.html.twig', [
+            'fuelings' => $vehicle->getFuelings()
+        ]);
+    }
 }

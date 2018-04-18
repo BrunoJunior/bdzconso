@@ -1,0 +1,37 @@
+{% extends 'connected.html.twig' %}
+
+{% block title %}
+    {% trans %}Fuelings{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block main %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">{% trans %}Date{% endtrans %}</th>
+            <th scope="col">{% trans %}Fuel type{% endtrans %}</th>
+            <th scope="col">{% trans %}Volume{% endtrans %}</th>
+            <th scope="col">{% trans %}Volume price{% endtrans %}</th>
+            <th scope="col">{% trans %}Amount{% endtrans %}</th>
+            <th scope="col">{% trans %}Traveled distance{% endtrans %}</th>
+            <th scope="col">{% trans %}Showed consumption{% endtrans %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for fueling in fuelings %}
+            <tr>
+                <td>{{ fueling.date|date("d/m/Y") }}</td>
+                <td>{{ include('parts/fuel.html.twig', { 'fuel': fueling.fuelType }) }}</td>
+                <td>{{ fueling.volume }}</td>
+                <td>{{ fueling.volumePrice }}</td>
+                <td>{{ fueling.amount }}</td>
+                <td>{{ fueling.traveledDistance }}</td>
+                <td>{{ fueling.showedConsumption }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
