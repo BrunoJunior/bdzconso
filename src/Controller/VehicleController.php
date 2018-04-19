@@ -86,6 +86,7 @@ class VehicleController extends Controller
         }
         $fueling = new Fueling();
         $fueling->setDate(new \DateTime());
+        $fueling->setFuelType($vehicle->getPreferedFuelType());
         $form = $this->createForm(FuelingType::class, $fueling);
 
         $form->handleRequest($request);
@@ -101,8 +102,7 @@ class VehicleController extends Controller
 
         return $this->render('fueling/edit.html.twig', [
             'form' => $form->createView(),
-            'new' => true,
-            'defaultFuelType' => $vehicle->getPreferedFuelType()
+            'new' => true
         ]);
     }
 

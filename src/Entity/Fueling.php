@@ -218,4 +218,18 @@ class Fueling
         $this->showedConsumption = $showedConsumption;
         return $this;
     }
+
+    /**
+     * Calculed consumption
+     * @return float
+     */
+    public function getRealConsumption(): ?float
+    {
+        if (!$this->traveledDistance) {
+            return -1.0;
+        }
+        // (l * 1000) ml / (100km / 1000) hm
+        // l/100km
+        return $this->volume / $this->traveledDistance;
+    }
 }

@@ -13,15 +13,10 @@ class IndexController extends Controller
      */
     public function index()
     {
-        return $this->render('index/index.html.twig');
-    }
-
-    /**
-     * @Route("/admin", name="admin")
-     */
-    public function admin()
-    {
-        return $this->render('admin/index.html.twig');
+        if ($this->getUser()) {
+            return $this->redirectToRoute('my_account');
+        }
+        return $this->redirectToRoute('security_login');
     }
 
     /**

@@ -28,7 +28,8 @@ class VehicleType extends AbstractType
                 'class' => FuelType::class,
                 'choice_label' => 'name',
                 'multiple' => false,
-                'expanded' => false
+                'expanded' => false,
+                'required' => false
             ])
         ;
     }

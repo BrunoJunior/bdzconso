@@ -1,5 +1,6 @@
 // On ready
 $(function () {
+    // Modal
     var confirmModal = $("#confirmModal");
     $('#main').on('click', 'a.btn[data-confirm]', function (event) {
         var confirm = $(this).data('confirm');
@@ -19,4 +20,7 @@ $(function () {
         confirmModal.find('#confirmModalYes').attr('href', '#');
         confirmModal.modal("hide");
     });
+
+    // Date picker
+    $('.js-datepicker').datepicker();
 });

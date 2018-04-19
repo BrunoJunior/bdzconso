@@ -18,7 +18,12 @@ class FuelingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('date', DateType::class)
+            ->add('date', DateType::class, [
+                'format' => 'dd/MM/yyyy',
+                'widget' => 'single_text',
+                'html5' => false,
+                'attr' => ['class' => 'js-datepicker']
+            ])
             ->add('volume', NumberType::class, [
                 'scale' => 2
             ])
@@ -36,7 +41,8 @@ class FuelingType extends AbstractType
             ])
             ->add('fuelType', EntityType::class, [
                 'class' => FuelType::class,
-                'choice_label' => 'name'
+                'choice_label' => 'name',
+                'required' => false
             ])
         ;
         $builder->get('volume')->addModelTransformer(static::getCallbackTransformerRatio(1000));
