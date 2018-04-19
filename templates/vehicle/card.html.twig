@@ -12,7 +12,7 @@
         <p class="card-text">{% trans %}Traveled distance:{% endtrans %} {{ vehicle.totalTraveledDistance|number_format(2, ',', '') }}km</p>
         <p class="card-text">{% trans %}Compatible fuels:{% endtrans %}
             {% for fuel in vehicle.compatibleFuels %}
-                {{ include('parts/fuel.html.twig', { 'fuel': fuel, 'prefered': fuel.id == vehicle.preferedFuelType.id }) }}
+                {{ include('parts/fuel.html.twig', { 'fuel': fuel, 'prefered': vehicle.preferedFuelType and fuel.id == vehicle.preferedFuelType.id }) }}
             {% endfor %}
         </p>
     </div>

@@ -1,5 +1,5 @@
 {% set type = 'primary' %}
-{% if prefered %}
+{% if prefered is defined and prefered %}
     {% set type = 'success' %}
 {% endif %}
 
