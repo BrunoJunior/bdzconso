@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Validator\VehicleValidator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -242,17 +243,7 @@ class Vehicle
      */
     public function validate(ExecutionContextInterface $context, $payload)
     {
-        if (!$this->getPreferredFuelType() instanceof FuelType) {
-            return;
-        }
-        foreach ($this->getCompatibleFuels() as $fuelType) {
-            if ($fuelType->getId() === $this->getPreferredFuelType()->getId()) {
-                return;
-            }
-        }
-        $context->buildViolation('The preferred fuel type has to be compatible with the vehicle!')
-            ->atPath('preferredFuelType')
-            ->addViolation();
+        VehicleValidator::validate($this, $context, $payload);
     }
 
 }
