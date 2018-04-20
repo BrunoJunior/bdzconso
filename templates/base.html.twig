@@ -1,5 +1,5 @@
 {% set logPath = path('security_login') %}
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
     {% set logPath = path('security_logout') %}
 {% endif %}
 
@@ -23,7 +23,7 @@
             <ul class="navbar-nav px-3">
                 <li class="nav-item text-nowrap">
                     <a class="nav-link" href="{{ logPath }}">
-                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                             {% trans %}Log out{% endtrans %}
                         {% else %}
                             {% trans %}Log in{% endtrans %}
@@ -33,11 +33,11 @@
             </ul>
         </nav>
         <div class="container-fluid">
-            <div class="row{% if not is_granted('IS_AUTHENTICATED_FULLY') %} justify-content-center{% endif %}">
+            <div class="row{% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %} justify-content-center{% endif %}">
                 {% block menu %}{% endblock %}
 
                 <main id="main" role="main" class="
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     col-md-9 ml-sm-auto col-lg-10 px-4
                 {% else %}
                     col-md-10 col-lg-8

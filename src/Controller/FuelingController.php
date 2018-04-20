@@ -22,7 +22,7 @@ class FuelingController extends Controller
      */
     public function edit(Request $request, Fueling $fueling)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
         $form = $this->createForm(FuelingType::class, $fueling);
 
         $form->handleRequest($request);

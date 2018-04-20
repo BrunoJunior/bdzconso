@@ -17,6 +17,11 @@ security:
             # par exemple la page d'accueil
             anonymous: true
 
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path:     /
+
             form_login:
                 # Le nom de la route de la page de connexion
                 check_path: security_login

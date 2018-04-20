@@ -16,14 +16,22 @@ class SecurityController extends Controller
      */
     public function login(Request $request, AuthenticationUtils $helper): Response
     {
-        $form = $this->createForm(ConnectionType::class, ['_username' => $helper->getLastUsername()]);
+        $initialValues= ['_username' => $helper->getLastUsername()];
+        $info = '';
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $initialValues['_username'] = $this->getUser()->getEmail();
+            $initialValues['_remember_me'] = true;
+            $info = 'You must specify your password to achieve this action!';
+        }
+        $form = $this->createForm(ConnectionType::class, $initialValues);
         $form->handleRequest($request);
 
         return $this->render(
             'security/login.html.twig',
             [
                 'form' => $form->createView(),
-                'error' => $helper->getLastAuthenticationError()
+                'error' => $helper->getLastAuthenticationError(),
+                'info' => $info,
             ]
         );
 

@@ -44,11 +44,12 @@ Next: Suivant
 current: courrant
 Confirmation: Confirmation
 'Are you sure?': 'Êtes-vous sûr ?'
-No: Non
-Yes: Oui
+'No': Non
+'Yes': Oui
 Close: Fermer
 Actions: Actions
 'Fueling edition': 'Modifier un plein'
 'Prefered fuel:': 'Carburant préféré :'
 'Prefered fuel type': 'Carburant préféré'
 'Real consumption': 'Consommation réelle'
+'Remember me': 'Rester connecter'

@@ -25,7 +25,7 @@ class VehicleController extends Controller
      */
     public function edit(Request $request, Vehicle $vehicle = null)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
         if ($vehicle === null) {
             $vehicle = new Vehicle();
         }
@@ -80,7 +80,7 @@ class VehicleController extends Controller
      * @throws AccessDeniedException
      */
     public function refill(Request $request, Vehicle $vehicle) {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
         if ($this->getUser()->getId() !== $vehicle->getUser()->getId()) {
             throw $this->createAccessDeniedException();
         }

@@ -4,8 +4,13 @@
 
 {% block main %}
     {% if error %}
-        <div class="alert alert-danger">
+        <div class="alert alert-danger" role="alert">
             {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+    {% if info %}
+        <div class="alert alert-info" role="alert">
+            {{ info|trans({}, 'security') }}
         </div>
     {% endif %}
     {{ form_start(form) }}
@@ -13,6 +18,7 @@
             <div class="col-md-6">{{ form_row(form._username) }}</div>
             <div class="col-md-6">{{ form_row(form._password) }}</div>
         </div>
+        {{ form_row(form._remember_me) }}
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
         <button type="submit" class="btn btn-primary">
             <i class="fas fa-sign-in-alt"></i> {% trans %}Log in{% endtrans %}

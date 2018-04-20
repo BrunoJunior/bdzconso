@@ -24,7 +24,7 @@ class IndexController extends Controller
      */
     public function account()
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
         $params = [
             'vehicles' => $this->getUser()->getVehicles()
         ];
