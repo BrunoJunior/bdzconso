@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FuelingRepository")
@@ -25,6 +26,8 @@ class Fueling
     /**
      * @var \DateTime
      * @ORM\Column(type="date")
+     * @Assert\Date()
+     * @Assert\LessThanOrEqual("today")
      */
     private $date;
 
