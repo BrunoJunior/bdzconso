@@ -34,13 +34,6 @@ class SecurityController extends Controller
                 'info' => $info,
             ]
         );
-
-        return $this->render('security/login.html.twig', [
-            // dernier email saisi (si il y en a un)
-            'last_email' => $helper->getLastUsername(),
-            // La derniere erreur de connexion (si il y en a une)
-            'error' => $helper->getLastAuthenticationError(),
-        ]);
     }
 
     /**

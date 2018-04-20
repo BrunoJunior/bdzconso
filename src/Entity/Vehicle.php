@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VehicleRepository")
@@ -63,9 +65,9 @@ class Vehicle
     /**
      * @var FuelType
      * @ORM\ManyToOne(targetEntity="App\Entity\FuelType")
-     * @ORM\JoinColumn(name="prefered_fuel_type_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="preferred_fuel_type_id", referencedColumnName="id", nullable=true)
      */
-    private $preferedFuelType;
+    private $preferredFuelType;
 
     /**
      * Vehicle constructor.
@@ -217,19 +219,40 @@ class Vehicle
     /**
      * @return FuelType
      */
-    public function getPreferedFuelType(): ?FuelType
+    public function getPreferredFuelType(): ?FuelType
     {
-        return $this->preferedFuelType;
+        return $this->preferredFuelType;
     }
 
     /**
-     * @param FuelType $preferedFuelType
+     * @param FuelType $preferredFuelType
      * @return Vehicle
      */
-    public function setPreferedFuelType(FuelType $preferedFuelType = null): Vehicle
+    public function setPreferredFuelType(FuelType $preferredFuelType = null): Vehicle
     {
-        $this->preferedFuelType = $preferedFuelType;
+        $this->preferredFuelType = $preferredFuelType;
         return $this;
+    }
+
+    /**
+     * Vehicle validation
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if (!$this->getPreferredFuelType() instanceof FuelType) {
+            return;
+        }
+        foreach ($this->getCompatibleFuels() as $fuelType) {
+            if ($fuelType->getId() === $this->getPreferredFuelType()->getId()) {
+                return;
+            }
+        }
+        $context->buildViolation('The preferred fuel type has to be compatible with the vehicle!')
+            ->atPath('preferredFuelType')
+            ->addViolation();
     }
 
 }

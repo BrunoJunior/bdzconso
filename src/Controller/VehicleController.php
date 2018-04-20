@@ -86,7 +86,7 @@ class VehicleController extends Controller
         }
         $fueling = new Fueling();
         $fueling->setDate(new \DateTime());
-        $fueling->setFuelType($vehicle->getPreferedFuelType());
+        $fueling->setFuelType($vehicle->getPreferredFuelType());
         $form = $this->createForm(FuelingType::class, $fueling);
 
         $form->handleRequest($request);

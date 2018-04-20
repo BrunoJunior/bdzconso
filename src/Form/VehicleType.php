@@ -24,7 +24,7 @@ class VehicleType extends AbstractType
                 'multiple' => true,
                 'expanded' => true
             ])
-            ->add('preferedFuelType', EntityType::class, [
+            ->add('preferredFuelType', EntityType::class, [
                 'class' => FuelType::class,
                 'choice_label' => 'name',
                 'multiple' => false,
