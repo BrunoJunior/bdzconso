@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa492b7b78be5a1410dfc1b5a4bd86d1",
+    "content-hash": "44cc615a785be1525c8ced009825001c",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -3766,6 +3766,54 @@
                 "validator"
             ],
             "time": "2018-02-22T12:30:04+00:00"
+        },
+        {
+            "name": "symfony/requirements-checker",
+            "version": "v1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/requirements-checker.git",
+                "reference": "4cad41f35d5c561d84b6385c627a3785c55fec1d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/requirements-checker/zipball/4cad41f35d5c561d84b6385c627a3785c55fec1d",
+                "reference": "4cad41f35d5c561d84b6385c627a3785c55fec1d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "bin": [
+                "bin/requirements-checker"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Requirements\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Check Symfony requirements and give recommendations",
+            "keywords": [
+                "configuration",
+                "distribution"
+            ],
+            "time": "2018-04-17T12:14:14+00:00"
         },
         {
             "name": "symfony/routing",
