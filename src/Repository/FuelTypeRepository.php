@@ -36,15 +36,19 @@ class FuelTypeRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?FuelType
+    /**
+     * Find fuel type by its name
+     * @param string $name
+     * @return FuelType|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findByName(string $name): ?FuelType
     {
         return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('f.name = :val')
+            ->setParameter('val', $name)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }

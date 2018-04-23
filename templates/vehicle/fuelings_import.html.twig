@@ -1,0 +1,30 @@
+{% extends 'connected.html.twig' %}
+
+{% block title %}
+        {% trans %}Import fuelings{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block main %}
+    <div class="alert alert-warning" role="alert">
+        {% trans %}Please select a CSV file with columns in this specific order and format:{% endtrans %}
+        <ol>
+            <li>{% trans %}Date:{% endtrans %} {% trans %}dd/mm/yyyy{% endtrans %}</li>
+            <li>{% trans %}Fuel type:{% endtrans %} {% trans %}A value in:{% endtrans %}SP95 /SP95-E10 / SP98 / Gazole / E85</li>
+            <li>{% trans %}Volume:{% endtrans %} {% trans %}in liter{% endtrans %} ({% trans %}with 2 decimals{% endtrans %})</li>
+            <li>{% trans %}Volume price:{% endtrans %} {% trans %}in euro{% endtrans %} ({% trans %}with 3 decimals{% endtrans %})</li>
+            <li>{% trans %}Amount:{% endtrans %} {% trans %}in euro{% endtrans %} ({% trans %}with 2 decimals{% endtrans %})</li>
+            <li>{% trans %}Traveled distance:{% endtrans %} {% trans %}in km{% endtrans %} ({% trans %}with 1 decimal{% endtrans %})</li>
+            <li>{% trans %}Showed consumption:{% endtrans %} {% trans %}in l/100km{% endtrans %} ({% trans %}with 1 decimal{% endtrans %})</li>
+            <li>{% trans %}Optional:{% endtrans %} {% trans %}Additived fuel:{% endtrans %} 0/1</li>
+        </ol>
+    </div>
+    {{ form_start(form) }}
+    {{ form_row(form.file) }}
+    <button type="submit" class="btn btn-primary">
+        {% trans %}Import{% endtrans %}
+    </button>
+    {{ form_end(form) }}
+{% endblock %}
