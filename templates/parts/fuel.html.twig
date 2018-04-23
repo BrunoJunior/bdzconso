@@ -3,4 +3,4 @@
     {% set type = 'success' %}
 {% endif %}
 
-<span class="badge badge-pill badge-{{ type }}">{{ fuel.name }}</span>
+<span class="badge badge-pill badge-{{ type }}">{{ fuel.name }}{% if additived is defined and additived %} +{% endif %}</span>

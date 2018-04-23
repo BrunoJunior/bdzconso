@@ -7,6 +7,7 @@ use App\Entity\FuelType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -42,6 +43,9 @@ class FuelingType extends AbstractType
             ->add('fuelType', EntityType::class, [
                 'class' => FuelType::class,
                 'choice_label' => 'name',
+                'required' => true
+            ])
+            ->add('additivedFuel', CheckboxType::class, [
                 'required' => false
             ])
         ;

@@ -21,6 +21,7 @@ class FuelingFixtures extends Fixture implements DependentFixtureInterface
             $fueling->setVolume((int) ($data[4] * 1000));
             $fueling->setVolumePrice((int) ($data[5] * 100));
             $fueling->setVehicle($this->getReference($data[1] . '_' . $data[0]));
+            $fueling->setAdditivedFuel(false);
             $manager->persist($fueling);
         }
         $manager->flush();

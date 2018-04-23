@@ -72,6 +72,13 @@ class Fueling
      */
     private $showedConsumption;
 
+    /**
+     * Additived fuel
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    private $additivedFuel = false;
+
     public function getId()
     {
         return $this->id;
@@ -220,6 +227,22 @@ class Fueling
     {
         $this->showedConsumption = $showedConsumption;
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdditivedFuel(): bool
+    {
+        return $this->additivedFuel;
+    }
+
+    /**
+     * @param bool $additivedFuel
+     */
+    public function setAdditivedFuel(bool $additivedFuel): void
+    {
+        $this->additivedFuel = $additivedFuel;
     }
 
     /**

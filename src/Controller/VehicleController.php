@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Fueling;
+use App\Entity\FuelType;
 use App\Entity\Vehicle;
 use App\Form\FuelingType;
 use App\Form\VehicleType;
@@ -79,14 +80,18 @@ class VehicleController extends Controller
      *     })
      * @throws AccessDeniedException
      */
-    public function refill(Request $request, Vehicle $vehicle) {
+    public function refill(Request $request, Vehicle $vehicle)
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
         if ($this->getUser()->getId() !== $vehicle->getUser()->getId()) {
             throw $this->createAccessDeniedException();
         }
         $fueling = new Fueling();
         $fueling->setDate(new \DateTime());
-        $fueling->setFuelType($vehicle->getPreferredFuelType());
+        $preferedFuelType = $vehicle->getPreferredFuelType();
+        if ($preferedFuelType instanceof FuelType) {
+            $fueling->setFuelType($preferedFuelType);
+        }
         $form = $this->createForm(FuelingType::class, $fueling);
 
         $form->handleRequest($request);

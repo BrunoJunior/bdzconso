@@ -30,7 +30,7 @@
         {% for fueling in fuelings %}
             <tr>
                 <td>{{ fueling.date|date("d/m/Y") }}</td>
-                <td>{{ include('parts/fuel.html.twig', { 'fuel': fueling.fuelType }) }}</td>
+                <td>{{ include('parts/fuel.html.twig', { 'fuel': fueling.fuelType, 'additived': fueling.additivedFuel }) }}</td>
                 <td>{{ (fueling.volume / 1000)|number_format(2,',','') }} l</td>
                 <td>{{ (fueling.volumePrice / 1000)|number_format(3,',','') }} €/l</td>
                 <td>{{ (fueling.amount / 100)|number_format(2,',','') }} €</td>
