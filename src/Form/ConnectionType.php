@@ -24,7 +24,9 @@ class ConnectionType extends AbstractType
         $builder
             ->add('_username', EmailType::class)
             ->add('_password', PasswordType::class)
-            ->add('_remember_me', CheckboxType::class)
+            ->add('_remember_me', CheckboxType::class, [
+                'required' => false
+            ])
         ;
     }
 
