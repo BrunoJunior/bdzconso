@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20180414215828 extends AbstractMigration
+class Version20180423131722 extends AbstractMigration
 {
     /**
      * Initialise fuel type list

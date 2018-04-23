@@ -919,15 +919,15 @@
     </collation>
     <table id="231" parent="2" name="compatible_fuels">
       <Engine>InnoDB</Engine>
-      <Collation>utf8mb4_unicode_ci</Collation>
+      <Collation>utf8_unicode_ci</Collation>
     </table>
     <table id="232" parent="2" name="fuel_type">
       <Engine>InnoDB</Engine>
-      <Collation>utf8mb4_unicode_ci</Collation>
+      <Collation>utf8_unicode_ci</Collation>
     </table>
     <table id="233" parent="2" name="fueling">
       <Engine>InnoDB</Engine>
-      <Collation>utf8mb4_unicode_ci</Collation>
+      <Collation>utf8_unicode_ci</Collation>
     </table>
     <table id="234" parent="2" name="migration_versions">
       <Engine>InnoDB</Engine>
@@ -935,11 +935,11 @@
     </table>
     <table id="235" parent="2" name="user">
       <Engine>InnoDB</Engine>
-      <Collation>utf8mb4_unicode_ci</Collation>
+      <Collation>utf8_unicode_ci</Collation>
     </table>
     <table id="236" parent="2" name="vehicle">
       <Engine>InnoDB</Engine>
-      <Collation>utf8mb4_unicode_ci</Collation>
+      <Collation>utf8_unicode_ci</Collation>
     </table>
     <column id="237" parent="231" name="vehicle_id">
       <Position>1</Position>
@@ -1119,7 +1119,8 @@ fuel_type_id</ColNames>
     </column>
     <column id="268" parent="235" name="roles">
       <Position>6</Position>
-      <DataType>json|0s</DataType>
+      <Comment>(DC2Type:json)</Comment>
+      <DataType>longtext|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
@@ -1149,35 +1150,35 @@ fuel_type_id</ColNames>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="274" parent="236" name="manufacturer">
+    <column id="274" parent="236" name="preferred_fuel_type_id">
       <Position>3</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="275" parent="236" name="model">
+    <column id="275" parent="236" name="manufacturer">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="276" parent="236" name="year">
+    <column id="276" parent="236" name="model">
       <Position>5</Position>
-      <DataType>int(11)|0s</DataType>
+      <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="277" parent="236" name="prefered_fuel_type_id">
+    <column id="277" parent="236" name="year">
       <Position>6</Position>
       <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
     <index id="278" parent="236" name="IDX_1B80E486A76ED395">
       <ColNames>user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="279" parent="236" name="IDX_1B80E486D46EFD15">
-      <ColNames>prefered_fuel_type_id</ColNames>
+    <index id="279" parent="236" name="IDX_1B80E4864D30C00D">
+      <ColNames>preferred_fuel_type_id</ColNames>
       <Type>btree</Type>
     </index>
     <key id="280" parent="236" name="PRIMARY">
@@ -1191,8 +1192,8 @@ fuel_type_id</ColNames>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="282" parent="236" name="FK_1B80E486D46EFD15">
-      <ColNames>prefered_fuel_type_id</ColNames>
+    <foreign-key id="282" parent="236" name="FK_1B80E4864D30C00D">
+      <ColNames>preferred_fuel_type_id</ColNames>
       <RefSchemaName>bdzconso</RefSchemaName>
       <RefTableName>fuel_type</RefTableName>
       <RefColNames>id</RefColNames>
