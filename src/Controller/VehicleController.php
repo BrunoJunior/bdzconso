@@ -8,10 +8,12 @@ use App\Entity\Vehicle;
 use App\Form\FuelingImportType;
 use App\Form\FuelingType;
 use App\Form\VehicleType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class VehicleController extends Controller
 {
@@ -157,15 +159,38 @@ class VehicleController extends Controller
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $numberFormatter = new \NumberFormatter('fr_FR', \NumberFormatter::DECIMAL);
             $em = $this->getDoctrine()->getManager();
             $repository = $this->getDoctrine()->getRepository(FuelType::class);
             // Import du fichier
             $filename = $form['file']->getData()->getPathname();
             if (($handle = fopen($filename, "r")) !== FALSE) { // Lecture du fichier, à adapter
                 while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) { // Eléments séparés par un point-virgule, à modifier si necessaire
+                    if (count($data) < 7 || count($data) > 8) {
+                        $form->addError(new FormError("Bad CSV format!"));
+                        continue;
+                    }
+                    $data[0] = \DateTime::createFromFormat('d/m/Y', $data[0]);
+                    $data[1] = $repository->findByName($data[1]);
+                    for ($i = 2; $i < 7; $i++) {
+                        $data[$i] = $numberFormatter->parse($data[$i]);
+                        if (!is_float($data[$i])) {
+                            $form->addError(new FormError("Bad number format!"));
+                            continue;
+                        }
+                    }
+                    if (!$data[0] instanceof \DateTime) {
+                        $form->addError(new FormError("Bad date format!"));
+                        continue;
+                    }
+                    if (!$data[1] instanceof FuelType) {
+                        $form->addError(new FormError("Unknown fuel type!"));
+                        continue;
+                    }
+
                     $fueling = new Fueling();
-                    $fueling->setDate(\DateTime::createFromFormat('d/m/Y', $data[0]));
-                    $fueling->setFuelType($repository->findByName($data[1]));
+                    $fueling->setDate($data[0]);
+                    $fueling->setFuelType($data[1]);
                     $fueling->setVolume((int) ($data[2] * 1000));
                     $fueling->setVolumePrice((int) ($data[3] * 1000));
                     $fueling->setAmount((int) ($data[4] * 100));
