@@ -1,23 +1,68 @@
 {% extends 'connected.html.twig' %}
 
-{% block title %}BDZConso{% endblock %}
+{% block title %}{% trans %}Dashboard{% endtrans %}{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/account.css') }}">
+{% endblock %}
+
+{% block title_actions %}
+    <a class="btn btn-primary" href="{{ path('vehicle') }}" role="button"><i class="fas fa-plus"></i> {% trans %}Add a vehicle{% endtrans %}</a>
 {% endblock %}
 
 {% block main %}
     <fieldset>
         <legend>
             {% trans %}My vehicles{% endtrans %}
-            <a class="btn btn-primary" href="{{ path('vehicle') }}" role="button"><i class="fas fa-plus"></i></a>
         </legend>
         <div class="row">
             {% for vehicle in vehicles %}
                 <div class="col-md-6 col-lg-4">
-                    {{ include('vehicle/card.html.twig', { 'vehicle': vehicle }) }}
+                    {{ include('vehicle/card.html.twig', { 'vehicle': vehicle, 'consumptions': vehicles_consumptions[vehicle.id] }) }}
                 </div>
             {% endfor %}
         </div>
     </fieldset>
+
+    <fieldset>
+        <legend>
+            {% trans %}Consumptions{% endtrans %}
+        </legend>
+        <div class="row">
+            <div class="chart-container">
+                <canvas id="consumptionsChart"></canvas>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function() {
+            var options = {
+                title: {text: 'Consumptions'},
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: {format: 'DD/MM/YYYY'},
+                        scaleLabel: {display: true,labelString: '{% trans %}Date{% endtrans %}'}
+                    }],
+                    yAxes: [{scaleLabel: {display: true,labelString: '{% trans %}Consumption{% endtrans %} l/100km'}}]
+                },
+            };
+            var labels = [];
+            var datasets = [];
+            $(".vehicle-card").each(function () {
+                datasets.push({
+                    label: $(this).find('.card-title').text(),
+                    fill: false,
+                    data: $(this).data('consumptions')
+                });
+            });
+            new Chart(document.getElementById("consumptionsChart"),{
+                    type:"line",
+                    data:{labels: labels,datasets:datasets},
+                    options:options});
+        });
+    </script>
 {% endblock %}

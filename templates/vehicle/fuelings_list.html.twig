@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block title_actions %}
-    <a class="btn btn-primary" href="{{ path('refill_vehicle', {'id': vehicleId}) }}" role="button"><i class="fas fa-plus"></i> {% trans %}Add{% endtrans %}</a>
+    <a class="btn btn-info" href="{{ path('refill_vehicle', {'id': vehicleId}) }}" role="button"><i class="fas fa-plus"></i> {% trans %}Add{% endtrans %}</a>
     <a class="btn btn-primary" href="{{ path('vehicle_fuelings_import', {'id': vehicleId}) }}" role="button"><i class="fas fa-download"></i> {% trans %}Import{% endtrans %}</a>
 {% endblock %}
 

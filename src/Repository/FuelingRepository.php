@@ -42,6 +42,25 @@ class FuelingRepository extends ServiceEntityRepository
     }
 
     /**
+     * Get Fuelings for a vehicle order by descending dates during the current year
+     * @param Vehicle $vehicle
+     * @return Fueling[]
+     */
+    public function findCurrentYearByVehicle(Vehicle $vehicle) {
+        $limitDate = new \DateTime();
+        $limitDate->sub(new \DateInterval("P1Y"));
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.vehicle = :val')
+            ->andWhere('f.date > :date')
+            ->setParameter('val', $vehicle)
+            ->setParameter('date', $limitDate)
+            ->orderBy('f.date', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
      * Count the number of fuelings for a vehicle
      * @param Vehicle $vehicle
      * @return int

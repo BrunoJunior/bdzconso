@@ -11,3 +11,10 @@
 .card-body .card-actions .btn {
     font-size: .7rem;
 }
+
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 40vh;
+    width: 100%;
+}
