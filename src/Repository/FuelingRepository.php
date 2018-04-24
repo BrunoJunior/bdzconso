@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Fueling;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -15,6 +16,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class FuelingRepository extends ServiceEntityRepository
 {
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Fueling::class);
@@ -46,12 +48,13 @@ class FuelingRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countByVehicle(Vehicle $vehicle):int {
-        return $this->createQueryBuilder('f')
+        $resultat = $this->createQueryBuilder('f')
             ->select('COUNT(f)')
             ->andWhere('f.vehicle = :val')
             ->setParameter('val', $vehicle)
             ->getQuery()
             ->getSingleScalarResult();
+        return $resultat;
     }
 
 //    /**

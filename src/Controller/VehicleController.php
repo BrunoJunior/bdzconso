@@ -130,7 +130,7 @@ class VehicleController extends Controller
     public function fuelings(Request $request, Vehicle $vehicle, int $page = 1) {
         $nbMax = 10;
         $repository = $this->getDoctrine()->getRepository(Fueling::class);
-        $nbPages = (int) ceil(count($repository->countByVehicle($vehicle)) / 10);
+        $nbPages = (int) ceil($repository->countByVehicle($vehicle) / 10);
         return $this->render('vehicle/fuelings_list.html.twig', [
             'vehicleId' => $vehicle->getId(),
             'fuelings' => $repository->findByVehicle($vehicle, $page, $nbMax),
