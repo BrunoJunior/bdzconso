@@ -8,6 +8,7 @@ use App\Entity\Vehicle;
 use App\Form\FuelingImportType;
 use App\Form\FuelingType;
 use App\Form\VehicleType;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -149,7 +150,7 @@ class VehicleController extends Controller
      *
      * @throws AccessDeniedException|\Doctrine\ORM\NonUniqueResultException
      */
-    public function importFuelings(Request $request, Vehicle $vehicle)
+    public function importFuelings(Request $request, Vehicle $vehicle, LoggerInterface $logger)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
         if ($this->getUser()->getId() !== $vehicle->getUser()->getId()) {
@@ -167,7 +168,7 @@ class VehicleController extends Controller
             if (($handle = fopen($filename, "r")) !== FALSE) { // Lecture du fichier, à adapter
                 while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) { // Eléments séparés par un point-virgule, à modifier si necessaire
                     if (count($data) < 7 || count($data) > 8) {
-                        $form->addError(new FormError("Bad CSV format!"));
+                        $logger->error("Bad CSV format!");
                         continue;
                     }
                     $data[0] = \DateTime::createFromFormat('d/m/Y', $data[0]);
@@ -175,20 +176,21 @@ class VehicleController extends Controller
                     for ($i = 2; $i < 7; $i++) {
                         $data[$i] = $numberFormatter->parse($data[$i]);
                         if (!is_float($data[$i])) {
-                            $form->addError(new FormError("Bad number format!"));
+                            $logger->error("Bad number format!");
                             continue;
                         }
                     }
                     if (!$data[0] instanceof \DateTime) {
-                        $form->addError(new FormError("Bad date format!"));
+                        $logger->error("Bad date format!");
                         continue;
                     }
                     if (!$data[1] instanceof FuelType) {
-                        $form->addError(new FormError("Unknown fuel type!"));
+                        $logger->error("Unknown fuel type!");
                         continue;
                     }
 
                     $fueling = new Fueling();
+                    $fueling->setVehicle($vehicle);
                     $fueling->setDate($data[0]);
                     $fueling->setFuelType($data[1]);
                     $fueling->setVolume((int) ($data[2] * 1000));
