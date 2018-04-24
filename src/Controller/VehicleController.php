@@ -166,7 +166,7 @@ class VehicleController extends Controller
             // Import du fichier
             $filename = $form['file']->getData()->getPathname();
             if (($handle = fopen($filename, "r")) !== FALSE) { // Lecture du fichier, à adapter
-                while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) { // Eléments séparés par un point-virgule, à modifier si necessaire
+                while (($data = fgetcsv($handle, 1000)) !== FALSE) { // Eléments séparés par un point-virgule, à modifier si necessaire
                     if (count($data) < 7 || count($data) > 8) {
                         $logger->error("Bad CSV format!");
                         continue;
