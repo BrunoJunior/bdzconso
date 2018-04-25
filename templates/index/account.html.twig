@@ -20,6 +20,11 @@
                 <div class="col-md-6 col-lg-4">
                     {{ include('vehicle/card.html.twig', { 'vehicle': vehicle }) }}
                 </div>
+            {% else %}
+                <div class="alert alert-info text-center" role="alert">
+                    <p>{% trans %}You don't have vehicle yet!{% endtrans %}</p>
+                    <a class="btn btn-success" href="{{ path('vehicle') }}" role="button"><i class="fas fa-plus"></i> {% trans %}Adding your first vehicle{% endtrans %}</a>
+                </div>
             {% endfor %}
         </div>
     </fieldset>

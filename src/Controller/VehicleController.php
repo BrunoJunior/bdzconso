@@ -135,7 +135,7 @@ class VehicleController extends Controller
             'vehicleId' => $vehicle->getId(),
             'fuelings' => $repository->findByVehicle($vehicle, $page, $nbMax),
             'page' => $page,
-            'nbPages' => $nbPages
+            'nbPages' => ($nbPages ? $nbPages : 1)
         ]);
     }
 
