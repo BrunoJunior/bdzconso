@@ -49,7 +49,8 @@ class VehicleController extends Controller
 
         return $this->render('vehicle/edit.html.twig', [
             'form' => $form->createView(),
-            'new' => $vehicle->getId() == 0
+            'new' => $vehicle->getId() == 0,
+            'active_link' => 'my_account'
         ]);
     }
 
@@ -111,7 +112,8 @@ class VehicleController extends Controller
 
         return $this->render('fueling/edit.html.twig', [
             'form' => $form->createView(),
-            'new' => true
+            'new' => true,
+            'active_link' => 'my_account'
         ]);
     }
 
@@ -135,7 +137,8 @@ class VehicleController extends Controller
             'vehicleId' => $vehicle->getId(),
             'fuelings' => $repository->findByVehicle($vehicle, $page, $nbMax),
             'page' => $page,
-            'nbPages' => ($nbPages ? $nbPages : 1)
+            'nbPages' => ($nbPages ? $nbPages : 1),
+            'active_link' => 'my_account'
         ]);
     }
 
@@ -212,7 +215,8 @@ class VehicleController extends Controller
         }
 
         return $this->render('vehicle/fuelings_import.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'active_link' => 'my_account'
         ]);
     }
 }

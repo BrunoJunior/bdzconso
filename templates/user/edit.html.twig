@@ -1,0 +1,32 @@
+{% extends new ? 'base.html.twig' : 'connected.html.twig' %}
+
+{% block title %}
+    {% if not new %}
+        {% trans %}User edition{% endtrans %}
+    {% else %}
+        {% trans %}Registration{% endtrans %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form.firstname) }}</div>
+            <div class="col-md-6">{{ form_row(form.lastname) }}</div>
+        </div>
+        {{ form_row(form.email) }}
+        <div class="row">
+            {% if new %}
+                <div class="col-md-6">{{ form_row(form.password.first) }}</div>
+                <div class="col-md-6">{{ form_row(form.password.second) }}</div>
+            {% else %}
+                <div class="col-md-6">{{ form_row(form.new_password.first) }}</div>
+                <div class="col-md-6">{{ form_row(form.new_password.second) }}</div>
+            {% endif %}
+        </div>
+        {% if not new %}
+            {{ form_row(form.roles) }}
+        {% endif %}
+        <button type="submit" class="btn btn-primary">{% if new %}{% trans %}Register{% endtrans %}{% else %}{% trans %}Update{% endtrans %}{% endif %}</button>
+    {{ form_end(form) }}
+{% endblock %}

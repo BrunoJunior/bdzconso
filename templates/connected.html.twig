@@ -5,10 +5,17 @@
         <div class="sidebar-sticky">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ path('my_account') }}">
-                        <i class="fas fa-home"></i> {% trans %}Dashboard{% endtrans %} <span class="sr-only">(current)</span>
+                    <a class="nav-link{% if active_link == 'my_account' %} active{% endif %}" href="{{ path('my_account') }}">
+                        <i class="fas fa-home"></i> {% trans %}Dashboard{% endtrans %}{% if active_link == 'my_account' %} <span class="sr-only">(current)</span>{% endif %}
                     </a>
                 </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link{% if active_link == 'admin' %} active{% endif %}" href="{{ path('admin') }}">
+                            <i class="fas fa-cubes"></i> {% trans %}Administration{% endtrans %}{% if active_link == 'admin' %} <span class="sr-only">(current)</span>{% endif %}
+                        </a>
+                    </li>
+                {% endif %}
                 {% block menu_elements %}{% endblock %}
             </ul>
         </div>

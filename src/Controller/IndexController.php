@@ -43,7 +43,8 @@ class IndexController extends Controller
         $params = [
             'vehicles' => $vehicles,
             'vehicles_consumptions' => $vehiclesConsumptions,
-            'vehicles_calc_consumptions' => $vehiclesCConsumptions
+            'vehicles_calc_consumptions' => $vehiclesCConsumptions,
+            'active_link' => 'my_account'
         ];
         return $this->render('index/account.html.twig', $params);
     }
