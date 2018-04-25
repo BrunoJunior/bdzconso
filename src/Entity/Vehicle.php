@@ -59,7 +59,7 @@ class Vehicle
 
     /**
      * @var Fueling[]|Collection
-     * @ORM\OneToMany(targetEntity="App\Entity\Fueling", mappedBy="vehicle")
+     * @ORM\OneToMany(targetEntity="App\Entity\Fueling", mappedBy="vehicle", cascade={"remove"})
      */
     private $fuelings;
 
