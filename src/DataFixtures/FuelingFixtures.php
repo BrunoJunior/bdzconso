@@ -37,6 +37,8 @@ class FuelingFixtures extends Fixture implements DependentFixtureInterface
             ['Honda Civic', 'jane_admin@symfony.com', '2018-03-15', 'SP95-E10', 48, 1.50, 72, 700, 6.5],
             ['Honda Civic', 'jane_admin@symfony.com', '2018-04-01', 'SP95-E10', 47, 1.50, 70.5, 690, 6.3],
             ['Honda Civic', 'jane_admin@symfony.com', '2018-04-15', 'SP95-E10', 50, 1.50, 75, 700, 6.4],
+            ['Honda Civic', 'jane_admin@symfony.com', '2018-05-01', 'SP95-E10', 47, 1.50, 70.5, 690, 6.3],
+            ['Honda Civic', 'jane_admin@symfony.com', '2018-05-15', 'SP95-E10', 50, 1.50, 75, 700, 6.4],
 
             ['Honda Insight', 'tom_admin@symfony.com', '2018-01-01', 'SP95-E10', 50, 1.50, 75, 700, 6.5],
             ['Honda Insight', 'tom_admin@symfony.com', '2018-01-15', 'SP95-E10', 40, 1.50, 60, 600, 6],

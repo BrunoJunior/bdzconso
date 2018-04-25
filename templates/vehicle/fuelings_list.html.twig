@@ -13,6 +13,33 @@
 {% endblock %}
 
 {% block main %}
+    {% if nbPages > 1 %}
+    <nav class="" aria-label="Fueling pagination">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {% if page < 2 %}disabled{% endif %}">
+                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': 1}) }}" tabindex="-1"><i class="fas fa-angle-double-left"></i></a>
+            </li>
+            <li class="page-item {% if page < 2 %}disabled{% endif %}">
+                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': page - 1}) }}" tabindex="-1"><i class="fas fa-angle-left"></i></a>
+            </li>
+            {% for i in 1..nbPages %}
+                <li class="page-item {% if page == i %}active{% endif %}">
+                    {% if page == i %}
+                        <span class="page-link">{{ i }}<span class="sr-only">({% trans %}current{% endtrans %})</span></span>
+                    {% else %}
+                        <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': i}) }}">{{ i }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            <li class="page-item {% if page == nbPages %}disabled{% endif %}">
+                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': page + 1}) }}"><i class="fas fa-angle-right"></i></a>
+            </li>
+            <li class="page-item {% if page == nbPages %}disabled{% endif %}">
+                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': nbPages}) }}" tabindex="-1"><i class="fas fa-angle-double-right"></i></a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -48,30 +75,4 @@
             </tbody>
         </table>
     </div>
-
-    <nav class="fixed-bottom" aria-label="Fueling pagination">
-        <ul class="pagination justify-content-center">
-            <li class="page-item {% if page < 2 %}disabled{% endif %}">
-                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': 1}) }}" tabindex="-1"><i class="fas fa-angle-double-left"></i></a>
-            </li>
-            <li class="page-item {% if page < 2 %}disabled{% endif %}">
-                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': page - 1}) }}" tabindex="-1"><i class="fas fa-angle-left"></i></a>
-            </li>
-            {% for i in 1..nbPages %}
-                <li class="page-item {% if page == i %}active{% endif %}">
-                    {% if page == i %}
-                        <span class="page-link">{{ i }}<span class="sr-only">({% trans %}current{% endtrans %})</span></span>
-                    {% else %}
-                        <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': i}) }}">{{ i }}</a>
-                    {% endif %}
-                </li>
-            {% endfor %}
-            <li class="page-item {% if page == nbPages %}disabled{% endif %}">
-                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': page + 1}) }}"><i class="fas fa-angle-right"></i></a>
-            </li>
-            <li class="page-item {% if page == nbPages %}disabled{% endif %}">
-                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': nbPages}) }}" tabindex="-1"><i class="fas fa-angle-double-right"></i></a>
-            </li>
-        </ul>
-    </nav>
 {% endblock %}
