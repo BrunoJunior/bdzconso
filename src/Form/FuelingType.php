@@ -29,7 +29,8 @@ class FuelingType extends AbstractType
                 'scale' => 2
             ])
             ->add('volumePrice', MoneyType::class, [
-                'divisor' => 1000
+                'divisor' => 1000,
+                'scale' => 3
             ])
             ->add('amount', MoneyType::class, [
                 'divisor' => 100
