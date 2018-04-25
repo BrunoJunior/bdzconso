@@ -29,16 +29,21 @@ class IndexController extends Controller
         $fuelingRepo = $this->getDoctrine()->getRepository(Fueling::class);
         $vehicles = $this->getUser()->getVehicles();
         $vehiclesConsumptions = [];
+        $vehiclesCConsumptions = [];
         foreach ($vehicles as $vehicle) {
             $consumptions = [];
+            $cConsumptions = [];
             foreach ($fuelingRepo->findCurrentYearByVehicle($vehicle) as $consumption) {
                 $consumptions[] = ['x' => $consumption->getDate()->format('d/m/Y'), 'y' => round($consumption->getRealConsumption(), 2)];
+                $cConsumptions[] = ['x' => $consumption->getDate()->format('d/m/Y'), 'y' => round($consumption->getShowedConsumption() / 10, 2)];
             }
             $vehiclesConsumptions[$vehicle->getId()] = json_encode($consumptions);
+            $vehiclesCConsumptions[$vehicle->getId()] = json_encode($cConsumptions);
         }
         $params = [
             'vehicles' => $vehicles,
-            'vehicles_consumptions' => $vehiclesConsumptions
+            'vehicles_consumptions' => $vehiclesConsumptions,
+            'vehicles_calc_consumptions' => $vehiclesCConsumptions
         ];
         return $this->render('index/account.html.twig', $params);
     }

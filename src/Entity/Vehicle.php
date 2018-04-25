@@ -71,6 +71,12 @@ class Vehicle
     private $preferredFuelType;
 
     /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    private $color;
+
+    /**
      * Vehicle constructor.
      */
     public function __construct() {
@@ -244,6 +250,24 @@ class Vehicle
     public function validate(ExecutionContextInterface $context, $payload)
     {
         VehicleValidator::validate($this, $context, $payload);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    /**
+     * @param string|null $color
+     * @return Vehicle
+     */
+    public function setColor(?string $color): Vehicle
+    {
+        $this->color = $color;
+        return $this;
     }
 
 }

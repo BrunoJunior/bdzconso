@@ -6,6 +6,7 @@ use App\Entity\FuelType;
 use App\Entity\Vehicle;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,6 +17,9 @@ class VehicleType extends AbstractType
     {
         $builder
             ->add('manufacturer')
+            ->add('color', ColorType::class, [
+                'required' => false
+            ])
             ->add('model')
             ->add('year', IntegerType::class)
             ->add('compatibleFuels', EntityType::class, [

@@ -18,7 +18,7 @@
         <div class="row">
             {% for vehicle in vehicles %}
                 <div class="col-md-6 col-lg-4">
-                    {{ include('vehicle/card.html.twig', { 'vehicle': vehicle, 'consumptions': vehicles_consumptions[vehicle.id] }) }}
+                    {{ include('vehicle/card.html.twig', { 'vehicle': vehicle }) }}
                 </div>
             {% endfor %}
         </div>
@@ -28,10 +28,8 @@
         <legend>
             {% trans %}Consumptions{% endtrans %}
         </legend>
-        <div class="row">
-            <div class="chart-container">
-                <canvas id="consumptionsChart"></canvas>
-            </div>
+        <div class="chart-container">
+            <canvas id="consumptionsChart"></canvas>
         </div>
     </fieldset>
 {% endblock %}
@@ -41,27 +39,44 @@
         $(function() {
             var options = {
                 title: {text: 'Consumptions'},
+                maintainAspectRatio: false,
                 scales: {
                     xAxes: [{
                         type: 'time',
+                        gridLines: {display: false},
                         time: {format: 'DD/MM/YYYY'},
                         scaleLabel: {display: true,labelString: '{% trans %}Date{% endtrans %}'}
                     }],
                     yAxes: [{scaleLabel: {display: true,labelString: '{% trans %}Consumption{% endtrans %} l/100km'}}]
                 },
             };
-            var labels = [];
             var datasets = [];
-            $(".vehicle-card").each(function () {
+            {% for vehicle in vehicles %}
                 datasets.push({
-                    label: $(this).find('.card-title').text(),
+                    label: "{{ vehicle.manufacturer }} {{ vehicle.model }}",
+                    {% if vehicle.color %}
+                        backgroundColor: "{{ vehicle.color|raw }}",
+                        borderColor: "{{ vehicle.color|raw }}",
+                    {% endif %}
                     fill: false,
-                    data: $(this).data('consumptions')
+                    data: JSON.parse('{{ vehicles_consumptions[vehicle.id]|raw }}')
                 });
-            });
+                var rgbBackground = "rgba(0, 0, 0, 0.1)";
+                {% if vehicle.color %}
+                    var rgb = hexToRgb("{{ vehicle.color }}");
+                    rgbBackground = "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", 0.5)";
+                {% endif %}
+                datasets.push({
+                    label: "{{ vehicle.manufacturer }} {{ vehicle.model }} - {% trans %}Showed{% endtrans %}",
+                    backgroundColor: rgbBackground,
+                    borderColor: rgbBackground,
+                    fill: false,
+                    data: JSON.parse('{{ vehicles_calc_consumptions[vehicle.id]|raw }}')
+                });
+            {% endfor %}
             new Chart(document.getElementById("consumptionsChart"),{
                     type:"line",
-                    data:{labels: labels,datasets:datasets},
+                    data:{labels: [],datasets:datasets},
                     options:options});
         });
     </script>
