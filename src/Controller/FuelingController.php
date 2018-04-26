@@ -15,7 +15,7 @@ class FuelingController extends Controller
      * @param Request $request
      * @param Fueling $fueling
      * @return Response
-     * @Route("/fueling/{id}", name="fueling",
+     * @Route("/fueling/{id}", name="my_fueling",
      *     requirements={
      *         "id": "\d+"
      *     })
@@ -30,7 +30,7 @@ class FuelingController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($fueling);
             $em->flush();
-            return $this->redirectToRoute('vehicle_fuelings', ['id' => $fueling->getVehicle()->getId()]);
+            return $this->redirectToRoute('my_vehicle_fuelings', ['id' => $fueling->getVehicle()->getId()]);
         }
 
         return $this->render('fueling/edit.html.twig', [
@@ -59,6 +59,28 @@ class FuelingController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->remove($fueling);
         $em->flush();
-        return $this->redirectToRoute('vehicle_fuelings', ['id' => $fueling->getVehicle()->getId()]);
+        return $this->redirectToRoute('my_vehicle_fuelings', ['id' => $fueling->getVehicle()->getId()]);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $page
+     * @return Response
+     * @Route("/fueling/all/{page}", name="my_fuelings",
+     *     requirements={
+     *         "page": "\d+"
+     *     })
+     * @throws AccessDeniedException|\Doctrine\ORM\NonUniqueResultException
+     */
+    public function list(Request $request, int $page = 1) {
+        $nbMax = 10;
+        $repository = $this->getDoctrine()->getRepository(Fueling::class);
+        $nbPages = (int) ceil($repository->countByUser($this->getUser()) / 10);
+        return $this->render('fueling/list.html.twig', [
+            'fuelings' => $repository->findByUser($this->getUser(), $page, $nbMax),
+            'page' => $page,
+            'nbPages' => ($nbPages ? $nbPages : 1),
+            'active_link' => 'my_fuelings'
+        ]);
     }
 }

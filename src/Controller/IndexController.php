@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Fueling;
-use App\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -43,8 +42,7 @@ class IndexController extends Controller
         $params = [
             'vehicles' => $vehicles,
             'vehicles_consumptions' => $vehiclesConsumptions,
-            'vehicles_calc_consumptions' => $vehiclesCConsumptions,
-            'active_link' => 'my_account'
+            'vehicles_calc_consumptions' => $vehiclesCConsumptions
         ];
         return $this->render('index/account.html.twig', $params);
     }

@@ -110,3 +110,12 @@ body {
     float: right;
     display: inline-block;
 }
+
+#left-menu li li {
+    display: none;
+    margin-left: 10px;
+}
+
+#left-menu li.active li {
+    display: flex;
+}

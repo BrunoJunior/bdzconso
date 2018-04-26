@@ -1,19 +1,39 @@
 {% extends 'base.html.twig' %}
+{% set active_link = app.request.get('_route') %}
 
 {% block menu %}
-    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+    <nav id="left-menu" class="col-md-2 d-none d-md-block bg-light sidebar">
         <div class="sidebar-sticky">
             <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link{% if active_link == 'my_account' %} active{% endif %}" href="{{ path('my_account') }}">
-                        <i class="fas fa-home"></i> {% trans %}Dashboard{% endtrans %}{% if active_link == 'my_account' %} <span class="sr-only">(current)</span>{% endif %}
+                <li class="nav-item{% if active_link matches '/^my_/' %} active{% endif %}">
+                    <a class="nav-link{% if active_link matches '/^my_/' %} active{% endif %}" href="{{ path('my_account') }}">
+                        <i class="fas fa-home"></i> {% trans %}Dashboard{% endtrans %}{% if active_link matches '/^my_/' %} <span class="sr-only">(current)</span>{% endif %}
                     </a>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link{% if active_link matches '/^my_fueling/' %} active{% endif %}" href="{{ path('my_fuelings') }}">
+                                <i class="fas fa-battery-full"></i> {% trans %}Fuelings{% endtrans %}{% if active_link matches '/^my_fueling/' %} <span class="sr-only">(current)</span>{% endif %}
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link{% if active_link == 'admin' %} active{% endif %}" href="{{ path('admin') }}">
-                            <i class="fas fa-cubes"></i> {% trans %}Administration{% endtrans %}{% if active_link == 'admin' %} <span class="sr-only">(current)</span>{% endif %}
+                    <li class="nav-item{% if active_link matches '/^admin/' %} active{% endif %}">
+                        <a class="nav-link{% if active_link matches '/^admin/' %} active{% endif %}" href="{{ path('admin') }}">
+                            <i class="fas fa-cubes"></i> {% trans %}Administration{% endtrans %}{% if active_link matches '/^admin/' %} <span class="sr-only">(current)</span>{% endif %}
                         </a>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link{% if active_link matches '/^admin_user/' %} active{% endif %}" href="{{ path('admin_users') }}">
+                                    <i class="fas fa-users"></i> {% trans %}Users{% endtrans %}{% if active_link matches '/^admin_user/' %} <span class="sr-only">(current)</span>{% endif %}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link{% if active_link matches '/^admin_fuel_types/' %} active{% endif %}" href="{{ path('admin_fuel_types') }}">
+                                    <i class="fas fa-list"></i> {% trans %}Fuel types{% endtrans %}{% if active_link matches '/^admin_fuel_types/' %} <span class="sr-only">(current)</span>{% endif %}
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 {% endif %}
                 {% block menu_elements %}{% endblock %}

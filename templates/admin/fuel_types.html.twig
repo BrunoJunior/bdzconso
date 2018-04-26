@@ -1,0 +1,32 @@
+{% extends 'connected.html.twig' %}
+
+{% block title %}{% trans %}Fuel types{% endtrans %}{% endblock %}
+{% block title_actions %}{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">{% trans %}ID{% endtrans %}</th>
+                    <th scope="col">{% trans %}Name{% endtrans %}</th>
+                    <th scope="col"><i class="fas fa-location-arrow"></i> {% trans %}Actions{% endtrans %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for fuelType in fuel_types %}
+                    <tr>
+                        <td>{{ fuelType.id }}</td>
+                        <td>{{ fuelType.name }}</td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" href="#" role="button"><i class="fas fa-edit"></i> </a>
+                            <a class="btn btn-danger btn-sm" href="#" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

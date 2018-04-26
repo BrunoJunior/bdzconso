@@ -1,0 +1,39 @@
+{% extends 'connected.html.twig' %}
+
+{% block title %}{% trans %}Users{% endtrans %}{% endblock %}
+{% block title_actions %}{% endblock %}
+
+{% block main %}
+    {{ include('parts/pagination.html.twig') }}
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">{% trans %}ID{% endtrans %}</th>
+                    <th scope="col"><i class="fas fa-at"></i> {% trans %}Email{% endtrans %}</th>
+                    <th scope="col">{% trans %}Firstname{% endtrans %}</th>
+                    <th scope="col">{% trans %}Lastname{% endtrans %}</th>
+                    <th scope="col"><i class="fas fa-key"></i> {% trans %}Roles{% endtrans %}</th>
+                    <th scope="col"><i class="fas fa-location-arrow"></i> {% trans %}Actions{% endtrans %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.lastname }}</td>
+                        <td>{{ user.roles|join(', ')}}</td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" href="{{ path('admin_user', {'id': user.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
+                            <a class="btn btn-danger btn-sm" href="{{ path('delete_user', {'id': user.id}) }}" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

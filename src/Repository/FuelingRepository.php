@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Fueling;
+use App\Entity\User;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Psr\Log\LoggerInterface;
@@ -71,6 +72,55 @@ class FuelingRepository extends ServiceEntityRepository
             ->select('COUNT(f)')
             ->andWhere('f.vehicle = :val')
             ->setParameter('val', $vehicle)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $resultat;
+    }
+
+    /**
+     * Count the number of fuelings for a user
+     * @param User $user
+     * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countByUser(User $user):int {
+        $resultat = $this->createQueryBuilder('f')
+            ->select('COUNT(f)')
+            ->innerJoin('f.vehicle', 'v')
+            ->andWhere('v.user = :val')
+            ->setParameter('val', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $resultat;
+    }
+
+    /**
+     * Get Fuelings for an user order by descending dates
+     * @param User $user
+     * @param int $pageNumber
+     * @param int $maxByPage
+     * @return Fueling[]
+     */
+    public function findByUser(User $user, $pageNumber = 1, $maxByPage = 10) {
+        return $this->createQueryBuilder('f')
+            ->innerJoin('f.vehicle', 'v')
+            ->andWhere('v.user = :val')
+            ->setParameter('val', $user)
+            ->orderBy('f.date', 'DESC')
+            ->setFirstResult(($pageNumber - 1) * $maxByPage)
+            ->setMaxResults($maxByPage)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotalTraveledDistance() {
+        $resultat = $this->createQueryBuilder('f')
+            ->select('SUM(f.traveledDistance)')
             ->getQuery()
             ->getSingleScalarResult();
         return $resultat;

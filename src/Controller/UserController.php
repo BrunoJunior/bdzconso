@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends Controller
 {
     /**
-     * @Route("/user/{id}", name="user")
+     * @Route("/user/{id}", name="admin_user")
      */
     public function edit(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user)
     {
@@ -43,7 +43,7 @@ class UserController extends Controller
 
         return $this->render(
             'user/edit.html.twig',
-            ['form' => $form->createView(), 'new' => false, 'active_link' => 'admin']
+            ['form' => $form->createView(), 'new' => false]
         );
     }
     /**

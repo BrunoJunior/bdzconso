@@ -1,78 +1,37 @@
-{% extends 'connected.html.twig' %}
-
-{% block title %}
-    {% trans %}Fuelings{% endtrans %}
-{% endblock %}
+{% extends 'fueling/list.html.twig' %}
+{% set current_path = app.request.get('_route') %}
 
 {% block title_actions %}
-    <a class="btn btn-info" href="{{ path('refill_vehicle', {'id': vehicleId}) }}" role="button"><i class="fas fa-plus"></i> {% trans %}Add{% endtrans %}</a>
-    <a class="btn btn-primary" href="{{ path('vehicle_fuelings_import', {'id': vehicleId}) }}" role="button"><i class="fas fa-download"></i> {% trans %}Import{% endtrans %}</a>
+    <a class="btn btn-info" href="{{ path('my_refill_vehicle', {'id': vehicleId}) }}" role="button"><i class="fas fa-plus"></i> {% trans %}Add{% endtrans %}</a>
+    <a class="btn btn-primary" href="{{ path('my_vehicle_fuelings_import', {'id': vehicleId}) }}" role="button"><i class="fas fa-download"></i> {% trans %}Import{% endtrans %}</a>
 {% endblock %}
 
-{% block stylesheets %}
-{% endblock %}
-
-{% block main %}
+{% block pagination %}
     {% if nbPages > 1 %}
     <nav class="" aria-label="Fueling pagination">
         <ul class="pagination justify-content-center">
             <li class="page-item {% if page < 2 %}disabled{% endif %}">
-                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': 1}) }}" tabindex="-1"><i class="fas fa-angle-double-left"></i></a>
+                <a class="page-link" href="{{ path(current_path, {'id': vehicleId, 'page': 1}) }}" tabindex="-1"><i class="fas fa-angle-double-left"></i></a>
             </li>
             <li class="page-item {% if page < 2 %}disabled{% endif %}">
-                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': page - 1}) }}" tabindex="-1"><i class="fas fa-angle-left"></i></a>
+                <a class="page-link" href="{{ path(current_path, {'id': vehicleId, 'page': page - 1}) }}" tabindex="-1"><i class="fas fa-angle-left"></i></a>
             </li>
             {% for i in 1..nbPages %}
                 <li class="page-item {% if page == i %}active{% endif %}">
                     {% if page == i %}
                         <span class="page-link">{{ i }}<span class="sr-only">({% trans %}current{% endtrans %})</span></span>
                     {% else %}
-                        <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': i}) }}">{{ i }}</a>
+                        <a class="page-link" href="{{ path(current_path, {'id': vehicleId, 'page': i}) }}">{{ i }}</a>
                     {% endif %}
                 </li>
             {% endfor %}
             <li class="page-item {% if page == nbPages %}disabled{% endif %}">
-                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': page + 1}) }}"><i class="fas fa-angle-right"></i></a>
+                <a class="page-link" href="{{ path(current_path, {'id': vehicleId, 'page': page + 1}) }}"><i class="fas fa-angle-right"></i></a>
             </li>
             <li class="page-item {% if page == nbPages %}disabled{% endif %}">
-                <a class="page-link" href="{{ path('vehicle_fuelings', {'id': vehicleId, 'page': nbPages}) }}" tabindex="-1"><i class="fas fa-angle-double-right"></i></a>
+                <a class="page-link" href="{{ path(current_path, {'id': vehicleId, 'page': nbPages}) }}" tabindex="-1"><i class="fas fa-angle-double-right"></i></a>
             </li>
         </ul>
     </nav>
     {% endif %}
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th scope="col">{% trans %}Date{% endtrans %}</th>
-                <th scope="col">{% trans %}Fuel type{% endtrans %}</th>
-                <th scope="col">{% trans %}Volume{% endtrans %}</th>
-                <th scope="col">{% trans %}Volume price{% endtrans %}</th>
-                <th scope="col">{% trans %}Amount{% endtrans %}</th>
-                <th scope="col">{% trans %}Traveled distance{% endtrans %}</th>
-                <th scope="col">{% trans %}Showed consumption{% endtrans %}</th>
-                <th scope="col">{% trans %}Real consumption{% endtrans %}</th>
-                <th scope="col">{% trans %}Actions{% endtrans %}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for fueling in fuelings %}
-                <tr>
-                    <td>{{ fueling.date|date("d/m/Y") }}</td>
-                    <td>{{ include('parts/fuel.html.twig', { 'fuel': fueling.fuelType, 'additived': fueling.additivedFuel }) }}</td>
-                    <td>{{ (fueling.volume / 1000)|number_format(2,',','') }} l</td>
-                    <td>{{ (fueling.volumePrice / 1000)|number_format(3,',','') }} €/l</td>
-                    <td>{{ (fueling.amount / 100)|number_format(2,',','') }} €</td>
-                    <td>{{ (fueling.traveledDistance / 10)|number_format(1,',','') }} km</td>
-                    <td>{{ (fueling.showedConsumption / 10)|number_format(1,',','') }} l/100km</td>
-                    <td>{{ fueling.realConsumption|number_format(2,',','') }} l/100km</td>
-                    <td>
-                        <a class="btn btn-primary btn-sm" href="{{ path('fueling', {'id': fueling.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
-                        <a class="btn btn-danger btn-sm" href="{{ path('delete_fueling', {'id': fueling.id}) }}" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
 {% endblock %}

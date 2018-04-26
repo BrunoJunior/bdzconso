@@ -1,50 +1,27 @@
 {% extends 'connected.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+{% endblock %}
+
 {% block title %}{% trans %}Administration{% endtrans %}{% endblock %}
 
 {% block main %}
-    <fieldset class="mb-3">
-        <legend>
-            {% trans %}Users{% endtrans %}
-        </legend>
-        <div class="row">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">{% trans %}ID{% endtrans %}</th>
-                        <th scope="col">{% trans %}Email{% endtrans %}</th>
-                        <th scope="col">{% trans %}Firstname{% endtrans %}</th>
-                        <th scope="col">{% trans %}Lastname{% endtrans %}</th>
-                        <th scope="col">{% trans %}Roles{% endtrans %}</th>
-                        <th scope="col">{% trans %}Actions{% endtrans %}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for user in users %}
-                        <tr>
-                            <td>{{ user.id }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.firstname }}</td>
-                            <td>{{ user.lastname }}</td>
-                            <td>{{ user.roles|join(', ')}}</td>
-                            <td>
-                                <a class="btn btn-primary btn-sm" href="{{ path('user', {'id': user.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
-                                <a class="btn btn-danger btn-sm" href="{{ path('delete_user', {'id': user.id}) }}" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+    <div class="row">
+        {% for stat in stats %}
+        <div class="card stat-card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    {{ stat.title }}
+                </h4>
+                <p class="card-text"><span class="badge badge-pill badge-primary">{{ stat.number }}</span></p>
             </div>
+            {% if stat.action is defined %}
+                <div class="card-footer text-center">
+                    <a class="btn btn-outline-primary" href="{{ path(stat.action) }}" role="button"><i class="fas fa-eye"></i> {% trans %}Show{% endtrans %}</a>
+                </div>
+            {% endif %}
         </div>
-    </fieldset>
-
-    <fieldset class="mb-3">
-        <legend>
-            {% trans %}Parameters{% endtrans %}
-        </legend>
-        <div class="row">
-        </div>
-    </fieldset>
+        {% endfor %}
+    </div>
 {% endblock %}

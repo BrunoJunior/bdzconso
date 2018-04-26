@@ -4,7 +4,7 @@
             {{ vehicle.manufacturer }} {{ vehicle.model }}
         </h5>
         <div class="card-actions">
-            <a class="btn btn-primary btn-sm" href="{{ path('vehicle', {'id': vehicle.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
+            <a class="btn btn-primary btn-sm" href="{{ path('my_vehicle', {'id': vehicle.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
             <a class="btn btn-danger btn-sm" href="{{ path('delete_vehicle', {'id': vehicle.id}) }}" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>
         </div>
         <h6 class="card-subtitle mb-2 text-muted">{{ vehicle.year }}</h6>
@@ -17,7 +17,7 @@
         </p>
     </div>
     <div class="card-footer text-center">
-        <a class="btn btn-success" href="{{ path('refill_vehicle', {'id': vehicle.id}) }}" role="button"><i class="fas fa-battery-full"></i> {% trans %}New fueling{% endtrans %}</a>
-        <a class="btn btn-info" href="{{ path('vehicle_fuelings', {'id': vehicle.id}) }}" role="button"><i class="fas fa-list"></i> {% trans %}Fuelings{% endtrans %}</a>
+        <a class="btn btn-success" href="{{ path('my_refill_vehicle', {'id': vehicle.id}) }}" role="button"><i class="fas fa-battery-full"></i> {% trans %}New fueling{% endtrans %}</a>
+        <a class="btn btn-info" href="{{ path('my_vehicle_fuelings', {'id': vehicle.id}) }}" role="button"><i class="fas fa-list"></i> {% trans %}Fuelings{% endtrans %}</a>
     </div>
 </div>

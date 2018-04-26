@@ -22,7 +22,7 @@ class VehicleController extends Controller
      * @param Request $request
      * @param Vehicle $vehicle
      * @return Response
-     * @Route("/vehicle/{id}", name="vehicle",
+     * @Route("/vehicle/{id}", name="my_vehicle",
      *     defaults={"id"= 0},
      *     requirements={
      *         "id": "\d+"
@@ -79,7 +79,7 @@ class VehicleController extends Controller
      * @param Request $request
      * @param Vehicle $vehicle
      * @return Response
-     * @Route("/vehicle/{id}/refill", name="refill_vehicle",
+     * @Route("/vehicle/{id}/refill", name="my_refill_vehicle",
      *     requirements={
      *         "id": "\d+"
      *     })
@@ -122,7 +122,7 @@ class VehicleController extends Controller
      * @param Vehicle $vehicle
      * @param int $page
      * @return Response
-     * @Route("/vehicle/{id}/fuelings/{page}", name="vehicle_fuelings",
+     * @Route("/vehicle/{id}/fuelings/{page}", name="my_vehicle_fuelings",
      *     requirements={
      *         "id": "\d+",
      *         "page": "\d+"
@@ -146,7 +146,7 @@ class VehicleController extends Controller
      * @param Request $request
      * @param Vehicle $vehicle
      * @return Response
-     * @Route("/vehicle/{id}/fuelings/import", name="vehicle_fuelings_import",
+     * @Route("/vehicle/{id}/fuelings/import", name="my_vehicle_fuelings_import",
      *     requirements={
      *         "id": "\d+"
      *     })
@@ -209,7 +209,7 @@ class VehicleController extends Controller
                 fclose($handle);
                 $em->flush();
             }
-            return $this->redirectToRoute('vehicle_fuelings', [
+            return $this->redirectToRoute('my_vehicle_fuelings', [
                 'id' => $vehicle->getId()
             ]);
         }

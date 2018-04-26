@@ -1,0 +1,52 @@
+{% extends 'connected.html.twig' %}
+
+{% block title %}
+    {% trans %}Fuelings{% endtrans %}
+{% endblock %}
+
+{% block main %}
+    {% block pagination %}
+        {{ include('parts/pagination.html.twig') }}
+    {% endblock %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">{% trans %}Date{% endtrans %}</th>
+                {% if vehicleId is not defined %}
+                    <th scope="col">{% trans %}Vehicle{% endtrans %}</th>
+                {% endif %}
+                <th scope="col">{% trans %}Fuel type{% endtrans %}</th>
+                <th scope="col">{% trans %}Volume{% endtrans %}</th>
+                <th scope="col">{% trans %}Volume price{% endtrans %}</th>
+                <th scope="col">{% trans %}Amount{% endtrans %}</th>
+                <th scope="col">{% trans %}Traveled distance{% endtrans %}</th>
+                <th scope="col">{% trans %}Showed consumption{% endtrans %}</th>
+                <th scope="col">{% trans %}Real consumption{% endtrans %}</th>
+                <th scope="col">{% trans %}Actions{% endtrans %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for fueling in fuelings %}
+                <tr>
+                    <td>{{ fueling.date|date("d/m/Y") }}</td>
+                    {% if vehicleId is not defined %}
+                        <td>{{ fueling.vehicle.manufacturer }} {{ fueling.vehicle.model }}</td>
+                    {% endif %}
+                    <td>{{ include('parts/fuel.html.twig', { 'fuel': fueling.fuelType, 'additived': fueling.additivedFuel }) }}</td>
+                    <td>{{ (fueling.volume / 1000)|number_format(2,',','') }} l</td>
+                    <td>{{ (fueling.volumePrice / 1000)|number_format(3,',','') }} €/l</td>
+                    <td>{{ (fueling.amount / 100)|number_format(2,',','') }} €</td>
+                    <td>{{ (fueling.traveledDistance / 10)|number_format(1,',','') }} km</td>
+                    <td>{{ (fueling.showedConsumption / 10)|number_format(1,',','') }} l/100km</td>
+                    <td>{{ fueling.realConsumption|number_format(2,',','') }} l/100km</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm" href="{{ path('my_fueling', {'id': fueling.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
+                        <a class="btn btn-danger btn-sm" href="{{ path('delete_fueling', {'id': fueling.id}) }}" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
