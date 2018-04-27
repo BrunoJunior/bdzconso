@@ -98,3 +98,6 @@ Vehicles: Véhicules
 Name: Nom
 'Cumulated distance': 'Distance cumulée'
 'Add a user': 'Ajouter un utilisateur'
+'Add a fuel type': 'Ajouter un carburant'
+'New fuel type': 'Nouveau carburant'
+'Fuel type edition': 'Modification du carburant'

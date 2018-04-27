@@ -60,7 +60,7 @@ class AdminController extends Controller
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $uRepo = $this->getDoctrine()->getRepository(User::class);
         $nbPages = (int) ceil($uRepo->count([]) / 10);
-        return $this->render('admin/users.html.twig', [
+        return $this->render('user/list.html.twig', [
             'users' => $uRepo->findAllPaginate($page, 10),
             'page' => $page,
             'nbPages' => $nbPages
@@ -74,7 +74,7 @@ class AdminController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $repo = $this->getDoctrine()->getRepository(FuelType::class);
-        return $this->render('admin/fuel_types.html.twig', [
+        return $this->render('fuel_type/list.html.twig', [
             'fuel_types' => $repo->findAll()
         ]);
     }

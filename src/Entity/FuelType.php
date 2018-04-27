@@ -20,7 +20,7 @@ class FuelType
      * @var string
      * @ORM\Column(type="string")
      */
-    private $name;
+    private $name = '';
 
     /**
      * @return integer

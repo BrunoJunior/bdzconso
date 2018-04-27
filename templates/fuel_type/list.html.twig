@@ -1,7 +1,9 @@
 {% extends 'connected.html.twig' %}
 
 {% block title %}{% trans %}Fuel types{% endtrans %}{% endblock %}
-{% block title_actions %}{% endblock %}
+{% block title_actions %}
+    <a class="btn btn-primary" href="{{ path('admin_fuel_type') }}" role="button"><i class="fas fa-plus"></i> {% trans %}Add a fuel type{% endtrans %}</a>
+{% endblock %}
 
 {% block main %}
     <div class="row">
@@ -20,8 +22,8 @@
                         <td>{{ fuelType.id }}</td>
                         <td>{{ fuelType.name }}</td>
                         <td>
-                            <a class="btn btn-primary btn-sm" href="#" role="button"><i class="fas fa-edit"></i> </a>
-                            <a class="btn btn-danger btn-sm" href="#" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>
+                            <a class="btn btn-primary btn-sm" href="{{ path('admin_fuel_type', {'id': fuelType.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
+                            <a class="btn btn-danger btn-sm" href="{{ path('delete_fuel_type', {'id': fuelType.id}) }}" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>
                         </td>
                     </tr>
                 {% endfor %}

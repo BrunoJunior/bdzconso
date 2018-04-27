@@ -1,0 +1,18 @@
+{% extends 'connected.html.twig' %}
+
+{% block title %}
+    {% if not new %}
+        {% trans %}Fuel type edition{% endtrans %}
+    {% else %}
+        {% trans %}New fuel type{% endtrans %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-12">{{ form_row(form.name) }}</div>
+    </div>
+    <button type="submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
+    {{ form_end(form) }}
+{% endblock %}

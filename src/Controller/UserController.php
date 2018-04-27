@@ -44,7 +44,7 @@ class UserController extends Controller
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('admin_users');
         }
 
         return $this->render(
