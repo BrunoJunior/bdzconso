@@ -66,7 +66,7 @@ class User implements UserInterface, \Serializable
 
     /**
      * @var Collection|Vehicle[]
-     * @ORM\OneToMany(targetEntity="App\Entity\Vehicle",mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Vehicle",mappedBy="user", cascade={"remove"})
      */
     private $vehicles;
 

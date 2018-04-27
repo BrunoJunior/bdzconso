@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -19,18 +21,44 @@ class UserType extends AbstractType
             ->add('firstname', TextType::class)
             ->add('lastname', TextType::class)
             ->add('email', EmailType::class)
-            ->add('password', RepeatedType::class, array(
-                'type' => PasswordType::class,
-                'first_options'  => array('label' => 'Password'),
-                'second_options' => array('label' => 'Retype password'),
-            ))
         ;
+        $hOptions = new ArrayCollection($options);
+        if ($hOptions->get('edit') === true) {
+            $builder
+                ->add('password', RepeatedType::class, array(
+                    'mapped' => false,
+                    'type' => PasswordType::class,
+                    'required' => false,
+                    'first_options'  => array('label' => 'Password'),
+                    'second_options' => array('label' => 'Retype password'),
+                ));
+        } else {
+            $builder
+                ->add('password', RepeatedType::class, array(
+                    'type' => PasswordType::class,
+                    'first_options'  => array('label' => 'Password'),
+                    'second_options' => array('label' => 'Retype password'),
+                ));
+        }
+        if ($hOptions->get('admin') === true) {
+            $builder
+                ->add('roles', ChoiceType::class, [
+                    'choices' => [
+                        'Administrator' => 'ROLE_ADMIN',
+                        'User' => 'ROLE_USER'
+                    ],
+                    'multiple' => true,
+                    'expanded' => true
+                ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'admin' => false,
+            'edit' => false
         ]);
     }
 }

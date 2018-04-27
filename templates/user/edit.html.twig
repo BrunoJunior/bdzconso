@@ -1,4 +1,4 @@
-{% extends new ? 'base.html.twig' : 'connected.html.twig' %}
+{% extends new and not is_granted('ROLE_ADMIN') ? 'base.html.twig' : 'connected.html.twig' %}
 
 {% block title %}
     {% if not new %}
@@ -16,15 +16,10 @@
         </div>
         {{ form_row(form.email) }}
         <div class="row">
-            {% if new %}
                 <div class="col-md-6">{{ form_row(form.password.first) }}</div>
                 <div class="col-md-6">{{ form_row(form.password.second) }}</div>
-            {% else %}
-                <div class="col-md-6">{{ form_row(form.new_password.first) }}</div>
-                <div class="col-md-6">{{ form_row(form.new_password.second) }}</div>
-            {% endif %}
         </div>
-        {% if not new %}
+        {% if form.roles is defined %}
             {{ form_row(form.roles) }}
         {% endif %}
         <button type="submit" class="btn btn-primary">{% if new %}{% trans %}Register{% endtrans %}{% else %}{% trans %}Update{% endtrans %}{% endif %}</button>

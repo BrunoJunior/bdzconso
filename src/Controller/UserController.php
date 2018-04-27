@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\UserUpdateType;
+use App\Form\UserType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,26 +13,32 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends Controller
 {
     /**
-     * @Route("/user/{id}", name="admin_user")
+     * @Route("/user/{id}", name="admin_user",
+     *     defaults={"id"= 0},
+     *     requirements={
+     *         "id": "\d+"
+     *     })
      */
-    public function edit(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user)
+    public function edit(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null)
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $form = $this->createForm(UserUpdateType::class, $user);
-
+        if ($user === null || $this->getUser()->getId() !== $user->getId()) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        }
+        if ($user === null) {
+            $user = new User();
+        }
+        $form = $this->createForm(UserType::class, $user, ['admin' => true, 'edit' => $user->getId() > 0]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $form->get('new_password');
+            $password = $form->get('password');
             if (!$password->isEmpty()) {
-                $password = $passwordEncoder->encodePassword($user, $password->getData());
-                $user->setPassword($password);
+                $user->setPassword($passwordEncoder->encodePassword($user, $password->getData()));
             }
             // Par defaut l'utilisateur aura toujours le rôle ROLE_USER
             $roles = new ArrayCollection($user->getRoles());
             if ($roles->isEmpty()) {
                 $user->setRoles(['ROLE_USER']);
             }
-
             // On enregistre l'utilisateur dans la base
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
@@ -43,7 +49,7 @@ class UserController extends Controller
 
         return $this->render(
             'user/edit.html.twig',
-            ['form' => $form->createView(), 'new' => false]
+            ['form' => $form->createView(), 'new' => $user->getId() == 0 ]
         );
     }
     /**
@@ -52,8 +58,9 @@ class UserController extends Controller
     public function delete(User $user)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($user);
+        $em->flush();
+        return $this->redirectToRoute('admin_users');
     }
 }
