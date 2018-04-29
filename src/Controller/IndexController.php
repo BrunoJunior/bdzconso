@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Fueling;
+use Mailgun\Mailgun;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -17,6 +18,19 @@ class IndexController extends Controller
             return $this->redirectToRoute('my_account');
         }
         return $this->redirectToRoute('security_login');
+    }
+
+    /**
+     * @Route("/admin/test/{name}", name="email_test")
+     */
+    public function test($name, Mailgun $mailgun) {
+        $mailgun->messages()->send('mb.bdesprez.com', [
+                'from'    => 'Excited User <mailgun@bdesprez.com>',
+                'to'      => 'Baz <pro@bdesprez.com>',
+                'subject' => 'Hello ' . $name,
+                'text'    => 'Testing some Mailgun awesomness!'
+        ]);
+        return $this->redirectToRoute('my_account');
     }
 
     /**
