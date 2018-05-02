@@ -2,19 +2,17 @@
 
 namespace App\Controller;
 
+use App\Business\FuelingBO;
 use App\Entity\Fueling;
 use App\Entity\FuelType;
 use App\Entity\Vehicle;
 use App\Form\FuelingImportType;
 use App\Form\FuelingType;
 use App\Form\VehicleType;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class VehicleController extends Controller
 {
@@ -145,6 +143,7 @@ class VehicleController extends Controller
     /**
      * @param Request $request
      * @param Vehicle $vehicle
+     * @param FuelingBO $fueling
      * @return Response
      * @Route("/vehicle/{id}/fuelings/import", name="my_vehicle_fuelings_import",
      *     requirements={
@@ -153,7 +152,7 @@ class VehicleController extends Controller
      *
      * @throws AccessDeniedException|\Doctrine\ORM\NonUniqueResultException
      */
-    public function importFuelings(Request $request, Vehicle $vehicle, LoggerInterface $logger)
+    public function importFuelings(Request $request, Vehicle $vehicle, FuelingBO $fueling)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
         if ($this->getUser()->getId() !== $vehicle->getUser()->getId()) {
@@ -163,52 +162,7 @@ class VehicleController extends Controller
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $numberFormatter = new \NumberFormatter('fr_FR', \NumberFormatter::DECIMAL);
-            $em = $this->getDoctrine()->getManager();
-            $repository = $this->getDoctrine()->getRepository(FuelType::class);
-            // Import du fichier
-            $filename = $form['file']->getData()->getPathname();
-            if (($handle = fopen($filename, "r")) !== FALSE) { // Lecture du fichier, à adapter
-                while (($data = fgetcsv($handle, 1000)) !== FALSE) { // Eléments séparés par un point-virgule, à modifier si necessaire
-                    if (count($data) < 7 || count($data) > 8) {
-                        $logger->error("Bad CSV format!");
-                        continue;
-                    }
-                    $data[0] = \DateTime::createFromFormat('d/m/Y', $data[0]);
-                    $data[1] = $repository->findByName($data[1]);
-                    for ($i = 2; $i < 7; $i++) {
-                        $data[$i] = $numberFormatter->parse($data[$i]);
-                        if (!is_float($data[$i])) {
-                            $logger->error("Bad number format!");
-                            continue;
-                        }
-                    }
-                    if (!$data[0] instanceof \DateTime) {
-                        $logger->error("Bad date format!");
-                        continue;
-                    }
-                    if (!$data[1] instanceof FuelType) {
-                        $logger->error("Unknown fuel type!");
-                        continue;
-                    }
-
-                    $fueling = new Fueling();
-                    $fueling->setVehicle($vehicle);
-                    $fueling->setDate($data[0]);
-                    $fueling->setFuelType($data[1]);
-                    $fueling->setVolume((int) ($data[2] * 1000));
-                    $fueling->setVolumePrice((int) ($data[3] * 1000));
-                    $fueling->setAmount((int) ($data[4] * 100));
-                    $fueling->setTraveledDistance((int) ($data[5] * 10));
-                    $fueling->setShowedConsumption((int) ($data[6] * 10));
-                    if (array_key_exists(7, $data)) {
-                        $fueling->setAdditivedFuel((bool) $data[7]);
-                    }
-                    $em->persist($fueling);
-                }
-                fclose($handle);
-                $em->flush();
-            }
+            $fueling->import($form['file']->getData()->getPathname(), $vehicle);
             return $this->redirectToRoute('my_vehicle_fuelings', [
                 'id' => $vehicle->getId()
             ]);

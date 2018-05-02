@@ -21,19 +21,6 @@ class IndexController extends Controller
     }
 
     /**
-     * @Route("/admin/test/{name}", name="email_test")
-     */
-    public function test($name, Mailgun $mailgun) {
-        $mailgun->messages()->send('mb.bdesprez.com', [
-                'from'    => 'Excited User <mailgun@bdesprez.com>',
-                'to'      => 'Baz <pro@bdesprez.com>',
-                'subject' => 'Hello ' . $name,
-                'text'    => 'Testing some Mailgun awesomness!'
-        ]);
-        return $this->redirectToRoute('my_account');
-    }
-
-    /**
      * @Route("/account", name="my_account")
      */
     public function account()

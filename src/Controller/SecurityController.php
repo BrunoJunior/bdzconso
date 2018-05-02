@@ -2,7 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Token;
+use App\Entity\User;
 use App\Form\ConnectionType;
+use App\Form\LostPasswordType;
+use Mailgun\Mailgun;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -47,5 +51,51 @@ class SecurityController extends Controller
     public function logout(): void
     {
         throw new \Exception('This should never be reached!');
+    }
+
+    /**
+     * @param Request $request
+     * @param Mailgun $mailgun
+     * @return Response
+     * @Route("/lostpassword", name="lost_password")
+     */
+    public function lostPassword(Request $request, Mailgun $mailgun):Response {
+        $form = $this->createForm(LostPasswordType::class);
+        $form->handleRequest($request);
+        $error = '';
+        if ($form->isSubmitted() && $form->isValid()) {
+            $repoUser = $this->getDoctrine()->getRepository(User::class);
+            $user = $repoUser->findOneBy(['email' => $form->get('email')->getData()]);
+            if ($user === null) {
+                $error = 'Unknown user!';
+            } else {
+                $token = new Token();
+                $token->setUser($user);
+                // 1 hour limitation
+                $token->setTimeLimit(3600);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($token);
+                $em->flush();
+                $mailParams = [
+                    'user' => $user,
+                    'key' => $token->getTokenKey(),
+                ];
+                $mailgun->messages()->send('mb.bdesprez.com', [
+                    'from' => 'BdzConso <mailgun@bdesprez.com>',
+                    'to' => $user->getFirstname() . ' ' . $user->getLastname() . ' <' . $user->getEmail() . '>',
+                    'subject' => 'Password reset',
+                    'html' => $this->renderView('email/lost_password.html.twig', $mailParams),
+                    'text' => $this->renderView('email/lost_password.txt.twig', $mailParams)
+                ]);
+                return $this->redirectToRoute("security_login");
+            }
+        }
+        return $this->render(
+            'security/lost_password.html.twig',
+            [
+                'form' => $form->createView(),
+                'error' => $error
+            ]
+        );
     }
 }
