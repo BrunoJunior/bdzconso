@@ -13,7 +13,7 @@ use Stringy\Stringy;
 
 class Color
 {
-    private CONST DEFAULT = '#000';
+    private CONST DEFAULT = '000';
     /**
      * @var Stringy
      */
@@ -26,12 +26,12 @@ class Color
     public function __construct($htmlColor = '')
     {
         $this->hexColor = Stringy::create($htmlColor);
+        if ($this->hexColor->startsWith('#')) {
+            $this->hexColor = $this->hexColor->substr(1);
+        }
         $len = $this->hexColor->length();
         if (($len !== 3 && $len !== 6) || !$this->hexColor->isHexadecimal()) {
             $this->hexColor = Stringy::create(static::DEFAULT);
-        }
-        if ($this->hexColor->startsWith('#')) {
-            $this->hexColor = $this->hexColor->substr(1);
         }
     }
 
