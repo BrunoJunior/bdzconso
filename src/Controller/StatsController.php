@@ -25,10 +25,10 @@ class StatsController extends Controller
 
         $tuiles = new ArrayCollection();
         $tuiles->add(Tuile::getInstance($translator->trans("Number of fueling"), $rFueling->countByUser($this->getUser())));
-        $tuiles->add(Tuile::getInstance($translator->trans("Cumulated distance"), $rFueling->getTotalTraveledDistance($this->getUser()) . " km"));
+        $tuiles->add(Tuile::getInstance($translator->trans("Cumulated distance"), $rFueling->getTotalTraveledDistance($this->getUser()) / 10 . " km"));
         $tuiles->add(Tuile::getInstance($translator->trans("Vehicles"), $rVehicle->countByUser($this->getUser())));
         $tuiles->add(Tuile::getInstance($translator->trans("Total amount"), ($rFueling->getTotalAmount($this->getUser()) / 100) . '€'));
-        $tuiles->add(Tuile::getInstance($translator->trans("Total fuel consumed"), ($rFueling->getTotalConsumedVolume($this->getUser()) / 10) . ' l'));
+        $tuiles->add(Tuile::getInstance($translator->trans("Total fuel consumed"), ($rFueling->getTotalConsumedVolume($this->getUser()) / 1000) . ' l'));
 
         $canvas = new ArrayCollection();
         $canvasConsumption = new TimeCanvas();
