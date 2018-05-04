@@ -76,7 +76,7 @@ class SecurityController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($token);
                 $em->flush();
-                $mail->send($user, 'lost password', [
+                $mail->send($user, 'lost_password', [
                     'user' => $user,
                     'key' => $token->getTokenKey(),
                 ]);
