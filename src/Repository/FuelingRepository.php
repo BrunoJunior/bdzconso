@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Fueling;
+use App\Entity\FuelType;
 use App\Entity\User;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -54,6 +55,26 @@ class FuelingRepository extends ServiceEntityRepository
             ->andWhere('f.vehicle = :val')
             ->andWhere('f.date > :date')
             ->setParameter('val', $vehicle)
+            ->setParameter('date', $limitDate)
+            ->orderBy('f.date', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * Get Fuelings for a user order by descending dates during the current year
+     * @param Vehicle $vehicle
+     * @return Fueling[]
+     */
+    public function findCurrentYearByUser(User $user) {
+        $limitDate = new \DateTime();
+        $limitDate->sub(new \DateInterval("P1Y"));
+        return $this->createQueryBuilder('f')
+            ->innerJoin('f.vehicle', 'v')
+            ->andWhere('v.user = :val')
+            ->andWhere('f.date > :date')
+            ->setParameter('val', $user)
             ->setParameter('date', $limitDate)
             ->orderBy('f.date', 'DESC')
             ->getQuery()
@@ -118,40 +139,60 @@ class FuelingRepository extends ServiceEntityRepository
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getTotalTraveledDistance() {
-        $resultat = $this->createQueryBuilder('f')
-            ->select('SUM(f.traveledDistance)')
-            ->getQuery()
-            ->getSingleScalarResult();
-        return $resultat;
+    public function getTotalTraveledDistance(User $user = null) {
+        $builder = $this->createQueryBuilder('f')
+            ->select('SUM(f.traveledDistance)');
+        if ($user !== null) {
+            $builder->innerJoin('f.vehicle', 'v')
+                ->andWhere('v.user = :user')
+                ->setParameter('user', $user);
+        }
+        return $builder->getQuery()->getSingleScalarResult();
     }
 
-//    /**
-//     * @return Fueling[] Returns an array of Fueling objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotalConsumedVolume(User $user = null) {
+        $builder = $this->createQueryBuilder('f')
+            ->select('SUM(f.volume)');
+        if ($user !== null) {
+            $builder->innerJoin('f.vehicle', 'v')
+                ->andWhere('v.user = :user')
+                ->setParameter('user', $user);
+        }
+        return $builder->getQuery()->getSingleScalarResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Fueling
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTotalAmount(User $user = null) {
+        $builder = $this->createQueryBuilder('f')
+            ->select('SUM(f.amount)');
+        if ($user !== null) {
+            $builder->innerJoin('f.vehicle', 'v')
+                ->andWhere('v.user = :user')
+                ->setParameter('user', $user);
+        }
+        return $builder->getQuery()->getSingleScalarResult();
     }
-    */
+
+    /**
+     * Get average volume prices grouped by date
+     * @param FuelType $fuelType
+     * @return array
+     */
+    public function getAverageVolumePrices(FuelType $fuelType) {
+        return $this->createQueryBuilder('f')
+            ->select('AVG(f.volumePrice) AS volumePrice, f.date')
+            ->andWhere('f.fuelType = :val')
+            ->setParameter('val', $fuelType)
+            ->orderBy('f.date', 'DESC')
+            ->groupBy('f.date')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

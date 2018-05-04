@@ -70,6 +70,10 @@ body {
     padding-top: 48px; /* Space for fixed navbar */
 }
 
+input[type="color"] {
+    height: 38px;
+}
+
 /*
  * Navbar
  */
@@ -118,4 +122,39 @@ body {
 
 #left-menu li.active li {
     display: flex;
+}
+
+/*
+ * Stats
+ */
+
+.stat-card {
+    margin: 10px;
+    text-align: center;
+}
+
+.stat-card .card-text {
+    font-size: 200%;
+}
+
+.card-body {
+    position: relative;
+}
+
+.card-body .card-actions {
+    position: absolute;
+    right: 1.25rem;
+    top: 1.25rem;
+}
+
+.card-body .card-actions .btn {
+    font-size: .7rem;
+}
+
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 40vh;
+    width: 100%;
+    min-height: 300px;
 }

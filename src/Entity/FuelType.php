@@ -23,6 +23,12 @@ class FuelType
     private $name = '';
 
     /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    private $color = '#000';
+
+    /**
      * @return integer
      */
     public function getId()
@@ -48,5 +54,22 @@ class FuelType
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getColor(): string
+    {
+        return $this->color;
+    }
+
+    /**
+     * @param string $color
+     * @return FuelType
+     */
+    public function setColor(string $color): FuelType
+    {
+        $this->color = $color;
+        return $this;
+    }
 
 }

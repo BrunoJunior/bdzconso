@@ -13,6 +13,7 @@
                 <tr>
                     <th scope="col">{% trans %}ID{% endtrans %}</th>
                     <th scope="col">{% trans %}Name{% endtrans %}</th>
+                    <th scope="col">{% trans %}Color{% endtrans %}</th>
                     <th scope="col"><i class="fas fa-location-arrow"></i> {% trans %}Actions{% endtrans %}</th>
                 </tr>
                 </thead>
@@ -21,6 +22,7 @@
                     <tr>
                         <td>{{ fuelType.id }}</td>
                         <td>{{ fuelType.name }}</td>
+                        <td style="background-color: {{ fuelType.color|raw }}"></td>
                         <td>
                             <a class="btn btn-primary btn-sm" href="{{ path('admin_fuel_type', {'id': fuelType.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
                             <a class="btn btn-danger btn-sm" href="{{ path('delete_fuel_type', {'id': fuelType.id}) }}" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>

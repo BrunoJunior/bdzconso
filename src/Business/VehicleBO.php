@@ -12,7 +12,6 @@ namespace App\Business;
 use App\Entity\Vehicle;
 use App\Tools\Color;
 use App\Tools\TimeCanvas;
-use App\Tools\TimeCanvasPoint;
 use App\Tools\TimeCanvasSerie;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -54,6 +53,21 @@ class VehicleBO
         foreach ($fuelings as $consumption) {
             $sRConsumptions->addPoint($this->fuelingBO->getRealConsumptionPoint($consumption));
             $sSConsumptions->addPoint($this->fuelingBO->getShowedConsumptionPoint($consumption));
+        }
+    }
+
+    /**
+     * @param Vehicle $vehicle
+     * @param array $fuelings
+     * @param TimeCanvas $canvas
+     */
+    public function fillAmountCanvas(Vehicle $vehicle, array $fuelings, TimeCanvas $canvas) {
+        $rLabel = $vehicle->getManufacturer() . ' ' . $vehicle->getModel();
+        $color = new Color($vehicle->getColor());
+        $serie = new TimeCanvasSerie($rLabel, $color->getRgba());
+        $canvas->addSerie($serie);
+        foreach ($fuelings as $fueling) {
+            $serie->addPoint($this->fuelingBO->getAmountPoint($fueling));
         }
     }
 }

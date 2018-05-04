@@ -2,10 +2,6 @@
 
 {% block title %}{% trans %}Dashboard{% endtrans %}{% endblock %}
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/account.css') }}">
-{% endblock %}
-
 {% block title_actions %}
     <a class="btn btn-primary" href="{{ path('my_vehicle') }}" role="button"><i class="fas fa-plus"></i> {% trans %}Add a vehicle{% endtrans %}</a>
 {% endblock %}

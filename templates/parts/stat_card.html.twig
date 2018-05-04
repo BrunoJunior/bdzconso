@@ -1,0 +1,13 @@
+<div class="card stat-card">
+    <div class="card-body">
+        <h4 class="card-title">
+            {{ tuile.title }}
+        </h4>
+        <p class="card-text"><span class="badge badge-pill badge-primary">{{ tuile.info }}</span></p>
+    </div>
+    {% if tuile.action is not empty %}
+        <div class="card-footer text-center">
+            <a class="btn btn-outline-primary" href="{{ path(tuile.action) }}" role="button"><i class="fas fa-eye"></i> {% trans %}Show{% endtrans %}</a>
+        </div>
+    {% endif %}
+</div>

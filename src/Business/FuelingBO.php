@@ -138,4 +138,22 @@ class FuelingBO
     {
         return new TimeCanvasPoint($fueling->getDate(), round($fueling->getShowedConsumption() / 10.0, 2));
     }
+
+    /**
+     * @param Fueling $fueling
+     * @return TimeCanvasPoint
+     */
+    public function getAmountPoint(Fueling $fueling): TimeCanvasPoint
+    {
+        return new TimeCanvasPoint($fueling->getDate(), round($fueling->getAmount() / 100.0, 2));
+    }
+
+    /**
+     * @param Fueling $fueling
+     * @return TimeCanvasPoint
+     */
+    public function getVolumePricePoint(Fueling $fueling): TimeCanvasPoint
+    {
+        return new TimeCanvasPoint($fueling->getDate(), round($fueling->getVolumePrice() / 1000.0, 3));
+    }
 }

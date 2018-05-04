@@ -1,27 +1,21 @@
 {% extends 'connected.html.twig' %}
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
-{% endblock %}
-
 {% block title %}{% trans %}Administration{% endtrans %}{% endblock %}
 
 {% block main %}
     <div class="row">
         {% for stat in stats %}
-        <div class="card stat-card">
-            <div class="card-body">
-                <h4 class="card-title">
-                    {{ stat.title }}
-                </h4>
-                <p class="card-text"><span class="badge badge-pill badge-primary">{{ stat.number }}</span></p>
-            </div>
-            {% if stat.action is defined %}
-                <div class="card-footer text-center">
-                    <a class="btn btn-outline-primary" href="{{ path(stat.action) }}" role="button"><i class="fas fa-eye"></i> {% trans %}Show{% endtrans %}</a>
-                </div>
-            {% endif %}
-        </div>
+            {{ include('parts/stat_card.html.twig', { 'tuile': stat }) }}
         {% endfor %}
     </div>
+    {% for canva in canvas %}
+        <fieldset class="mb-3">
+            <legend>
+                {{ canva.name }}
+            </legend>
+            <div class="chart-container">
+                <canvas class="chart" data-canvas="{{ canva.json }}"></canvas>
+            </div>
+        </fieldset>
+    {% endfor %}
 {% endblock %}

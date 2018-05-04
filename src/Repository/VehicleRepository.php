@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -17,6 +18,22 @@ class VehicleRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Vehicle::class);
+    }
+
+    /**
+     * Count the number of vehicles for a user
+     * @param User $user
+     * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countByUser(User $user):int {
+        $resultat = $this->createQueryBuilder('v')
+            ->select('COUNT(v)')
+            ->andWhere('v.user = :val')
+            ->setParameter('val', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $resultat;
     }
 
 //    /**
