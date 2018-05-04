@@ -20,6 +20,11 @@
                                 <i class="fas fa-chart-area"></i> {% trans %}My stats{% endtrans %}{% if active_link matches '/^my_stat/' %} <span class="sr-only">(current)</span>{% endif %}
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if active_link matches '/^my_account_/' %} active{% endif %}" href="{{ path('my_account_edit') }}">
+                                <i class="fas fa-user-circle"></i> {% trans %}My account{% endtrans %}{% if active_link matches '/^my_account_/' %} <span class="sr-only">(current)</span>{% endif %}
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 {% if is_granted('ROLE_ADMIN') %}

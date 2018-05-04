@@ -73,6 +73,7 @@ class FuelingController extends Controller
      * @throws AccessDeniedException|\Doctrine\ORM\NonUniqueResultException
      */
     public function list(Request $request, int $page = 1) {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
         $nbMax = 10;
         $repository = $this->getDoctrine()->getRepository(Fueling::class);
         $nbPages = (int) ceil($repository->countByUser($this->getUser()) / 10);

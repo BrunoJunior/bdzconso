@@ -20,6 +20,7 @@ class StatsController extends Controller
      */
     public function index(TranslatorInterface $translator, VehicleBO $vehicleBO, UserBO $userBO)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
         $rFueling = $this->getDoctrine()->getRepository(Fueling::class);
         $rVehicle = $this->getDoctrine()->getRepository(Vehicle::class);
 

@@ -2,12 +2,9 @@
 
 namespace App\Controller;
 
-use App\Business\FuelingBO;
 use App\Business\VehicleBO;
 use App\Entity\Fueling;
 use App\Tools\TimeCanvas;
-use App\Tools\TimeCanvasPoint;
-use App\Tools\TimeCanvasSerie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

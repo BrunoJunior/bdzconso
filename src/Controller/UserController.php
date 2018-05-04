@@ -12,6 +12,15 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends Controller
 {
+
+    /**
+     * @Route("/account/edit", name="my_account_edit")
+     */
+    public function show(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
+        return $this->edit($request, $passwordEncoder, $this->getUser());
+    }
+
     /**
      * @Route("/user/{id}", name="admin_user",
      *     defaults={"id"= 0},
@@ -27,7 +36,7 @@ class UserController extends Controller
         if ($user === null) {
             $user = new User();
         }
-        $form = $this->createForm(UserType::class, $user, ['admin' => true, 'edit' => $user->getId() > 0]);
+        $form = $this->createForm(UserType::class, $user, ['admin' => $this->isGranted('ROLE_ADMIN'), 'edit' => $user->getId() > 0]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $form->get('password');
@@ -44,7 +53,10 @@ class UserController extends Controller
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('admin_users');
+            if ($this->isGranted('ROLE_ADMIN')) {
+                return $this->redirectToRoute('admin_users');
+            }
+            return $this->redirectToRoute('my_account');
         }
 
         return $this->render(
