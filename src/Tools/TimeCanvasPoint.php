@@ -80,7 +80,7 @@ class TimeCanvasPoint implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'x' => $this->date->format('d/m/Y'),
+            'x' => $this->date->format('Y-m-d'),
             'y' => $this->value
         ];
     }

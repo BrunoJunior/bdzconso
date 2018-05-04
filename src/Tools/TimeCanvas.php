@@ -110,7 +110,7 @@ class TimeCanvas implements \JsonSerializable
                         [
                             'type' => 'time',
                             'gridLines' => ['display' => false],
-                            'time' => ['format' => 'DD/MM/YYYY'],
+                            'time' => ['unit' => 'month', 'tooltipFormat' => 'L'],
                             'scaleLabel' => ['display' => true, 'labelString' => 'Date']
                         ]
                     ],
