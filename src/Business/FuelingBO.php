@@ -13,6 +13,7 @@ use App\Entity\Fueling;
 use App\Entity\FuelType;
 use App\Entity\Vehicle;
 use App\Repository\FuelTypeRepository;
+use App\Tools\TimeCanvasPoint;
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
 
@@ -118,5 +119,23 @@ class FuelingBO
         if ($flush) {
             $this->entityManager->flush();
         }
+    }
+
+    /**
+     * @param Fueling $fueling
+     * @return TimeCanvasPoint
+     */
+    public function getRealConsumptionPoint(Fueling $fueling): TimeCanvasPoint
+    {
+        return new TimeCanvasPoint($fueling->getDate(), round($fueling->getRealConsumption(), 2));
+    }
+
+    /**
+     * @param Fueling $fueling
+     * @return TimeCanvasPoint
+     */
+    public function getShowedConsumptionPoint(Fueling $fueling): TimeCanvasPoint
+    {
+        return new TimeCanvasPoint($fueling->getDate(), round($fueling->getShowedConsumption() / 10.0, 2));
     }
 }

@@ -2,10 +2,16 @@
 
 namespace App\Controller;
 
+use App\Business\FuelingBO;
+use App\Business\VehicleBO;
 use App\Entity\Fueling;
-use Mailgun\Mailgun;
+use App\Tools\TimeCanvas;
+use App\Tools\TimeCanvasPoint;
+use App\Tools\TimeCanvasSerie;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class IndexController extends Controller
 {
@@ -21,29 +27,26 @@ class IndexController extends Controller
     }
 
     /**
+     * @param TimeCanvas $canvas
+     * @param VehicleBO $vehicleBO
+     * @param TranslatorInterface $translator
+     * @return Response
      * @Route("/account", name="my_account")
      */
-    public function account()
+    public function account(TimeCanvas $canvas, VehicleBO $vehicleBO, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
+        $canvas
+            ->setName($translator->trans("Consumptions"))
+            ->setYScaleLabel($translator->trans('Consumption %unit%', ['%unit%' => 'l/100km']));
         $fuelingRepo = $this->getDoctrine()->getRepository(Fueling::class);
         $vehicles = $this->getUser()->getVehicles();
-        $vehiclesConsumptions = [];
-        $vehiclesCConsumptions = [];
         foreach ($vehicles as $vehicle) {
-            $consumptions = [];
-            $cConsumptions = [];
-            foreach ($fuelingRepo->findCurrentYearByVehicle($vehicle) as $consumption) {
-                $consumptions[] = ['x' => $consumption->getDate()->format('d/m/Y'), 'y' => round($consumption->getRealConsumption(), 2)];
-                $cConsumptions[] = ['x' => $consumption->getDate()->format('d/m/Y'), 'y' => round($consumption->getShowedConsumption() / 10, 2)];
-            }
-            $vehiclesConsumptions[$vehicle->getId()] = json_encode($consumptions);
-            $vehiclesCConsumptions[$vehicle->getId()] = json_encode($cConsumptions);
+            $vehicleBO->fillConsumptionCanvas($vehicle, $fuelingRepo->findCurrentYearByVehicle($vehicle), $canvas);
         }
         $params = [
             'vehicles' => $vehicles,
-            'vehicles_consumptions' => $vehiclesConsumptions,
-            'vehicles_calc_consumptions' => $vehiclesCConsumptions
+            'canvas' => $canvas
         ];
         return $this->render('index/account.html.twig', $params);
     }

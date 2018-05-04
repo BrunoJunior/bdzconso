@@ -6,7 +6,7 @@ use App\Entity\Token;
 use App\Entity\User;
 use App\Form\ConnectionType;
 use App\Form\LostPasswordType;
-use Mailgun\Mailgun;
+use App\Tools\EMailSender;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -55,11 +55,11 @@ class SecurityController extends Controller
 
     /**
      * @param Request $request
-     * @param Mailgun $mailgun
+     * @param EMailSender $mail
      * @return Response
      * @Route("/lostpassword", name="lost_password")
      */
-    public function lostPassword(Request $request, Mailgun $mailgun):Response {
+    public function lostPassword(Request $request, EMailSender $mail):Response {
         $form = $this->createForm(LostPasswordType::class);
         $form->handleRequest($request);
         $error = '';
@@ -76,16 +76,9 @@ class SecurityController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($token);
                 $em->flush();
-                $mailParams = [
+                $mail->send($user, 'lost password', [
                     'user' => $user,
                     'key' => $token->getTokenKey(),
-                ];
-                $mailgun->messages()->send('mb.bdesprez.com', [
-                    'from' => 'BdzConso <mailgun@bdesprez.com>',
-                    'to' => $user->getFirstname() . ' ' . $user->getLastname() . ' <' . $user->getEmail() . '>',
-                    'subject' => 'Password reset',
-                    'html' => $this->renderView('email/lost_password.html.twig', $mailParams),
-                    'text' => $this->renderView('email/lost_password.txt.twig', $mailParams)
                 ]);
                 return $this->redirectToRoute("security_login");
             }
