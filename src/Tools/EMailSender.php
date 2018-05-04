@@ -8,6 +8,7 @@
 
 namespace App\Tools;
 
+use App\Entity\User;
 use Mailgun\Mailgun;
 use Mailgun\Model\Message\SendResponse;
 
