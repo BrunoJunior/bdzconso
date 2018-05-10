@@ -74,9 +74,9 @@ class SuperFueling
 
     /**
      * @param Vehicle $vehicle
-     * @return Fueling
+     * @return SuperFueling
      */
-    public function setVehicle(Vehicle $vehicle): Fueling
+    public function setVehicle(Vehicle $vehicle): SuperFueling
     {
         $this->vehicle = $vehicle;
         return $this;
@@ -92,9 +92,9 @@ class SuperFueling
 
     /**
      * @param \DateTime $date
-     * @return Fueling
+     * @return SuperFueling
      */
-    public function setDate(\DateTime $date): Fueling
+    public function setDate(\DateTime $date): SuperFueling
     {
         $this->date = $date;
         return $this;
@@ -110,9 +110,9 @@ class SuperFueling
 
     /**
      * @param FuelType $fuelType
-     * @return Fueling
+     * @return SuperFueling
      */
-    public function setFuelType(FuelType $fuelType): Fueling
+    public function setFuelType(FuelType $fuelType): SuperFueling
     {
         $this->fuelType = $fuelType;
         return $this;
@@ -129,9 +129,9 @@ class SuperFueling
 
     /**
      * @param int $volume
-     * @return Fueling
+     * @return SuperFueling
      */
-    public function setVolume(int $volume): Fueling
+    public function setVolume(int $volume): SuperFueling
     {
         $this->volume = $volume;
         return $this;
@@ -147,9 +147,9 @@ class SuperFueling
 
     /**
      * @param int $volumePrice
-     * @return Fueling
+     * @return SuperFueling
      */
-    public function setVolumePrice(int $volumePrice): Fueling
+    public function setVolumePrice(int $volumePrice): SuperFueling
     {
         $this->volumePrice = $volumePrice;
         return $this;
@@ -165,9 +165,9 @@ class SuperFueling
 
     /**
      * @param int $amount
-     * @return Fueling
+     * @return SuperFueling
      */
-    public function setAmount(int $amount): Fueling
+    public function setAmount(int $amount): SuperFueling
     {
         $this->amount = $amount;
         return $this;

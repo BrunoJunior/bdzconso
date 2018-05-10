@@ -12,22 +12,48 @@
 {% endblock %}
 
 {% block main %}
-    {{ form_start(form) }}
-    {{ form_row(form.date) }}
-    <div class="row">
-        <div class="col-md-4">{{ form_row(form.fuelType) }}{{ form_row(form.additivedFuel) }}</div>
-        <div class="col-md-4">{{ form_row(form.volume) }}</div>
-        <div class="col-md-4">{{ form_row(form.amount) }}</div>
+    <div class="form-group">
+        <div class="form-check">
+            <input id="partial_fueling" name="partial_fueling" class="form-check-input" value="1" type="checkbox">
+            <label class="form-check-label" for="partial_fueling">{% trans %}Partial fueling{% endtrans %}</label>
+        </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">{{ form_row(form.traveledDistance) }}</div>
-        <div class="col-md-4">{{ form_row(form.showedConsumption) }}</div>
-        <div class="col-md-4">{{ form_row(form.volumePrice) }}</div>
+    <div class="conditional_form">
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form.date) }}</div>
+            <div class="col-md-6">{{ form_row(form.fuelType) }}{{ form_row(form.additivedFuel) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4" data-calculation="volumePrice" data-type="volume">{{ form_row(form.volume) }}</div>
+            <div class="col-md-4" data-calculation="volumePrice" data-type="amount">{{ form_row(form.amount) }}</div>
+            <div class="col-md-4" data-type="volumePrice">{{ form_row(form.volumePrice) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form.traveledDistance) }}</div>
+            <div class="col-md-6">{{ form_row(form.showedConsumption) }}</div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            {% trans %}Save{% endtrans %}
+        </button>
+        {{ form_end(form) }}
     </div>
-    <button type="submit" class="btn btn-primary">
-        {% trans %}Save{% endtrans %}
-    </button>
-    {{ form_end(form) }}
+    <div class="conditional_form" style="display: none;">
+        {{ form_start(form_partial) }}
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form_partial.date) }}</div>
+            <div class="col-md-6">{{ form_row(form_partial.fuelType) }}{{ form_row(form_partial.additivedFuel) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4" data-calculation="volumePrice" data-type="volume">{{ form_row(form_partial.volume) }}</div>
+            <div class="col-md-4" data-calculation="volumePrice" data-type="amount">{{ form_row(form_partial.amount) }}</div>
+            <div class="col-md-4" data-type="volumePrice">{{ form_row(form_partial.volumePrice) }}</div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            {% trans %}Save{% endtrans %}
+        </button>
+        {{ form_end(form_partial) }}
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -36,18 +62,44 @@
             var parseFloatFr = function (string) {
                 return parseFloat(string.replace(',', '.'))
             };
-            var calculingVolumePrice = function () {
-                var fuelingAmount = parseFloatFr($('#fueling_amount').val());
-                var fuelingVolume = parseFloatFr($('#fueling_volume').val());
-                var fuelingVolumePrice = parseFloatFr($('#fueling_volumePrice').val());
+
+            var calculateVolumePrice = function (form) {
+                var volumePriceZone = form.find('[data-type="volumePrice"] input');
+                var fuelingAmount = parseFloatFr(form.find('[data-type="amount"] input').val());
+                var fuelingVolume = parseFloatFr(form.find('[data-type="volume"] input').val());
+                var fuelingVolumePrice = parseFloatFr(volumePriceZone.val());
                 if (!isNaN(fuelingVolumePrice) || isNaN(fuelingVolume) || isNaN(fuelingAmount) || fuelingVolume === 0.0) {
                     return;
                 }
                 var volumePrice = fuelingAmount/fuelingVolume;
-                $('#fueling_volumePrice').val(volumePrice.toLocaleString(undefined, { minimumFractionDigits: 3 }));
+                volumePriceZone.val(volumePrice.toLocaleString(undefined, { minimumFractionDigits: 3 }));
             }
-            $('#fueling_volume').on('change', calculingVolumePrice);
-            $('#fueling_amount').on('change', calculingVolumePrice);
+
+            $('form').on('change', 'div[data-calculation="volumePrice"]', function () {
+                calculateVolumePrice($(this).closest('form'));
+            });
+
+            $('#partial_fueling').on('change', function() {
+                var partial = $(this).checked;
+                $('.conditional_form').toggle(partial);
+            });
+
+            $('.conditional_form:visible').on('change', '.form-control, .form-check-input', function () {
+                var zone = $(this);
+                var form_name = zone.closest('form').attr('name');
+                var zone_name = zone.attr('name').replace(form_name, '');
+                var not_visible_form = $('.conditional_form:not(:visible)');
+                var not_visible_zone = not_visible_form.find('[name$="' + zone_name + '"]');
+                if (zone.is('.form-check-input')) {
+                    not_visible_zone.prop("checked", zone[0].checked);
+                } else {
+                    not_visible_zone.val(zone.val());
+                }
+                if (zone.closest('[data-calculation="volumePrice"]').length > 0) {
+                    calculateVolumePrice(not_visible_form);
+                }
+            });
+
         });
     </script>
 {% endblock %}

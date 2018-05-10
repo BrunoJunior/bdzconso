@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Business\FuelingBO;
 use App\Entity\Fueling;
 use App\Entity\FuelType;
+use App\Entity\PartialFueling;
 use App\Entity\Vehicle;
 use App\Form\FuelingImportType;
 use App\Form\FuelingType;
+use App\Form\PartialFuelingType;
 use App\Form\VehicleType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -89,20 +91,31 @@ class VehicleController extends Controller
         if ($this->getUser()->getId() !== $vehicle->getUser()->getId()) {
             throw $this->createAccessDeniedException();
         }
+        $date = new \DateTime();
         $fueling = new Fueling();
-        $fueling->setDate(new \DateTime());
+        $partialFueling = new PartialFueling();
+        $fueling->setDate($date);
+        $partialFueling->setDate($date);
         $preferedFuelType = $vehicle->getPreferredFuelType();
         if ($preferedFuelType instanceof FuelType) {
             $fueling->setFuelType($preferedFuelType);
+            $partialFueling->setFuelType($preferedFuelType);
         }
         $form = $this->createForm(FuelingType::class, $fueling);
+        $formPartial = $this->createForm(PartialFuelingType::class, $partialFueling);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $fueling->setVehicle($vehicle);
-            // On enregistre le véhicule dans la base
+        $formPartial->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid() || $formPartial->isSubmitted() && $formPartial->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($fueling);
+            if ($form->isSubmitted()) {
+                $fueling->setVehicle($vehicle);
+                $em->persist($fueling);
+            } else {
+                $partialFueling->setVehicle($vehicle);
+                $em->persist($partialFueling);
+            }
+            // On enregistre le véhicule dans la base
             $em->flush();
 
             return $this->redirectToRoute('my_account');
@@ -110,6 +123,7 @@ class VehicleController extends Controller
 
         return $this->render('fueling/edit.html.twig', [
             'form' => $form->createView(),
+            'form_partial' => $formPartial->createView(),
             'new' => true,
             'active_link' => 'my_account'
         ]);
