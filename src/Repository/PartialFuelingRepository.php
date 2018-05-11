@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\PartialFueling;
+use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -19,32 +20,18 @@ class PartialFuelingRepository extends ServiceEntityRepository
         parent::__construct($registry, PartialFueling::class);
     }
 
-//    /**
-//     * @return PartialFueling[] Returns an array of PartialFueling objects
-//     */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Find all partial fuelings for a specific vehicle
+     * @param Vehicle $vehicle
+     * @return PartialFueling[] Returns an array of PartialFueling objects
+     */
+    public function findByVehicle(Vehicle $vehicle)
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('p.vehicle = :val')
+            ->setParameter('val', $vehicle)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?PartialFueling
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

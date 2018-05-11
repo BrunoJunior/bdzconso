@@ -12,48 +12,16 @@
 {% endblock %}
 
 {% block main %}
-    <div class="form-group">
-        <div class="form-check">
-            <input id="partial_fueling" name="partial_fueling" class="form-check-input" value="1" type="checkbox">
-            <label class="form-check-label" for="partial_fueling">{% trans %}Partial fueling{% endtrans %}</label>
+    {% if form_partial is defined %}
+        <div class="form-group">
+            <div class="form-check">
+                <input id="partial_fueling" name="partial_fueling" class="form-check-input" value="1" type="checkbox">
+                <label class="form-check-label" for="partial_fueling">{% trans %}Partial fueling{% endtrans %}</label>
+            </div>
         </div>
-    </div>
-    <div class="conditional_form">
-        {{ form_start(form) }}
-        <div class="row">
-            <div class="col-md-6">{{ form_row(form.date) }}</div>
-            <div class="col-md-6">{{ form_row(form.fuelType) }}{{ form_row(form.additivedFuel) }}</div>
-        </div>
-        <div class="row">
-            <div class="col-md-4" data-calculation="volumePrice" data-type="volume">{{ form_row(form.volume) }}</div>
-            <div class="col-md-4" data-calculation="volumePrice" data-type="amount">{{ form_row(form.amount) }}</div>
-            <div class="col-md-4" data-type="volumePrice">{{ form_row(form.volumePrice) }}</div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">{{ form_row(form.traveledDistance) }}</div>
-            <div class="col-md-6">{{ form_row(form.showedConsumption) }}</div>
-        </div>
-        <button type="submit" class="btn btn-primary">
-            {% trans %}Save{% endtrans %}
-        </button>
-        {{ form_end(form) }}
-    </div>
-    <div class="conditional_form" style="display: none;">
-        {{ form_start(form_partial) }}
-        <div class="row">
-            <div class="col-md-6">{{ form_row(form_partial.date) }}</div>
-            <div class="col-md-6">{{ form_row(form_partial.fuelType) }}{{ form_row(form_partial.additivedFuel) }}</div>
-        </div>
-        <div class="row">
-            <div class="col-md-4" data-calculation="volumePrice" data-type="volume">{{ form_row(form_partial.volume) }}</div>
-            <div class="col-md-4" data-calculation="volumePrice" data-type="amount">{{ form_row(form_partial.amount) }}</div>
-            <div class="col-md-4" data-type="volumePrice">{{ form_row(form_partial.volumePrice) }}</div>
-        </div>
-        <button type="submit" class="btn btn-primary">
-            {% trans %}Save{% endtrans %}
-        </button>
-        {{ form_end(form_partial) }}
-    </div>
+        {{ include('fueling/form.html.twig', {'form': form_partial, 'hidden': true}) }}
+    {% endif %}
+    {{ include('fueling/form.html.twig') }}
 {% endblock %}
 
 {% block javascripts %}

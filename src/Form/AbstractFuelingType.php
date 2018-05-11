@@ -52,6 +52,14 @@ abstract class AbstractFuelingType extends AbstractType
             ->add('additivedFuel', CheckboxType::class, [
                 'required' => false
             ])
+            ->add('traveledDistance', NumberType::class, [
+                'divisor' => 10,
+                'scale' => 1
+            ])
+            ->add('showedConsumption', NumberType::class, [
+                'divisor' => 10,
+                'scale' => 1
+            ]);
         ;
         $this->completeForm($builder, $options);
     }

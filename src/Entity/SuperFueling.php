@@ -65,6 +65,20 @@ class SuperFueling
     protected $additivedFuel = false;
 
     /**
+     * Traveled distance in hectometers
+     * @var integer
+     * @ORM\Column(type="integer")
+     */
+    protected $traveledDistance;
+
+    /**
+     * Showed consumption in liter / hectometer
+     * @var integer
+     * @ORM\Column(type="integer")
+     */
+    protected $showedConsumption;
+
+    /**
      * @return Vehicle
      */
     public function getVehicle(): ?Vehicle
@@ -183,9 +197,47 @@ class SuperFueling
 
     /**
      * @param bool $additivedFuel
+     * @return SuperFueling
      */
-    public function setAdditivedFuel(bool $additivedFuel): void
+    public function setAdditivedFuel(bool $additivedFuel): SuperFueling
     {
         $this->additivedFuel = $additivedFuel;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTraveledDistance(): ?int
+    {
+        return $this->traveledDistance;
+    }
+
+    /**
+     * @param int $traveledDistance
+     * @return SuperFueling
+     */
+    public function setTraveledDistance(int $traveledDistance): SuperFueling
+    {
+        $this->traveledDistance = $traveledDistance;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShowedConsumption(): ?int
+    {
+        return $this->showedConsumption;
+    }
+
+    /**
+     * @param int $showedConsumption
+     * @return SuperFueling
+     */
+    public function setShowedConsumption(int $showedConsumption): SuperFueling
+    {
+        $this->showedConsumption = $showedConsumption;
+        return $this;
     }
 }
