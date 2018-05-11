@@ -77,6 +77,12 @@ class Vehicle
     private $color;
 
     /**
+     * @var PartialFueling[]|Collection
+     * @ORM\OneToMany(targetEntity="App\Entity\PartialFueling", mappedBy="vehicle", cascade={"remove"})
+     */
+    private $partialFuelings;
+
+    /**
      * Vehicle constructor.
      */
     public function __construct() {
@@ -193,6 +199,14 @@ class Vehicle
     }
 
     /**
+     * @return PartialFueling[]|Collection
+     */
+    public function getPartialFuelings(): Collection
+    {
+        return $this->partialFuelings;
+    }
+
+    /**
      * The average consumption in l/100km
      * @return float|null
      */
@@ -268,6 +282,19 @@ class Vehicle
     {
         $this->color = $color;
         return $this;
+    }
+
+    /**
+     * The waiting traveled distance for the vehicle
+     * @return float
+     */
+    public function getWaitingTraveledDistance(): float {
+        $distance = 0;
+        foreach ($this->getPartialFuelings() as $fueling) {
+            $distance += $fueling->getTraveledDistance(); // in hm (0.1 km)
+        }
+        // Waited km
+        return $distance / 10;
     }
 
 }

@@ -2,20 +2,19 @@
 
 namespace App\Form;
 
-use App\Entity\Fueling;
+use App\Entity\PartialFueling;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FuelingType extends AbstractFuelingType
+class PartialFuelingType extends AbstractFuelingType
 {
-
     /**
-     * For fueling class
+     * For partial fueling entity
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Fueling::class,
+            'data_class' => PartialFueling::class,
         ]);
     }
 }

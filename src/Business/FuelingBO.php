@@ -11,8 +11,10 @@ namespace App\Business;
 
 use App\Entity\Fueling;
 use App\Entity\FuelType;
+use App\Entity\PartialFueling;
 use App\Entity\Vehicle;
 use App\Repository\FuelTypeRepository;
+use App\Repository\PartialFuelingRepository;
 use App\Tools\TimeCanvasPoint;
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
@@ -33,6 +35,12 @@ class FuelingBO
     private $fuelTypeRepo;
 
     /**
+     * DAO PartialFueling
+     * @var PartialFuelingRepository
+     */
+    private $partialFuelingRepo;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -48,12 +56,13 @@ class FuelingBO
      * @param FuelTypeRepository $fuelTypeRepo
      * @param LoggerInterface $logger
      */
-    public function __construct(ObjectManager $entityManager, FuelTypeRepository $fuelTypeRepo, LoggerInterface $logger)
+    public function __construct(ObjectManager $entityManager, FuelTypeRepository $fuelTypeRepo, LoggerInterface $logger, PartialFuelingRepository $partialFuelingRepo)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
         $this->fuelTypeRepo = $fuelTypeRepo;
         $this->numberFormatter = new \NumberFormatter('fr_FR', \NumberFormatter::DECIMAL);
+        $this->partialFuelingRepo = $partialFuelingRepo;
     }
 
     /**

@@ -9,7 +9,7 @@
         </div>
         <h6 class="card-subtitle mb-2 text-muted">{{ vehicle.year }}</h6>
         <p class="card-text">{% trans %}Average consumption:{% endtrans %} {% if vehicle.avgConsumption %}{{ vehicle.avgConsumption|number_format(2, ',', '') }}{% else %}--{% endif %} l/100km</p>
-        <p class="card-text">{% trans %}Traveled distance:{% endtrans %} {{ vehicle.totalTraveledDistance|number_format(2, ',', '') }}km</p>
+        <p class="card-text">{% trans %}Traveled distance:{% endtrans %} {{ vehicle.totalTraveledDistance|number_format(2, ',', '') }}km{% if vehicle.waitingTraveledDistance > 0 %}<span data-toggle="tooltip" data-placement="top" title="{% trans %}Waiting distance{% endtrans %}"> (+{{ vehicle.waitingTraveledDistance|number_format(2, ',', '') }}km)</span>{% endif %}</p>
         <p class="card-text">{% trans %}Compatible fuels:{% endtrans %}
             {% for fuel in vehicle.compatibleFuels %}
                 {{ include('parts/fuel.html.twig', { 'fuel': fuel, 'prefered': vehicle.preferredFuelType and fuel.id == vehicle.preferredFuelType.id }) }}

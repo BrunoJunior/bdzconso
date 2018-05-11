@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use App\Business\FuelingBO;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FuelingRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
-class Fueling
+class Fueling extends SuperFueling
 {
     /**
      * @ORM\Id()
@@ -18,231 +20,16 @@ class Fueling
     private $id;
 
     /**
-     * @var Vehicle
-     * @ORM\ManyToOne(targetEntity="App\Entity\Vehicle", inversedBy="fuelings")
-     */
-    private $vehicle;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(type="date")
-     * @Assert\Date()
-     * @Assert\LessThanOrEqual("today")
-     */
-    private $date;
-
-    /**
-     * @var FuelType
-     * @ORM\ManyToOne(targetEntity="App\Entity\FuelType")
-     */
-    private $fuelType;
-
-    /**
-     * Volume in milliliter
-     * @var integer
-     * @ORM\Column(type="integer")
-     */
-    private $volume;
-
-    /**
-     * Volume price in tenth of cents
-     * @var integer
-     * @ORM\Column(type="integer")
-     */
-    private $volumePrice;
-
-    /**
-     * Amount in cents
-     * @var integer
-     * @ORM\Column(type="integer")
-     */
-    private $amount;
-
-    /**
-     * Traveled distance in hectometers
-     * @var integer
-     * @ORM\Column(type="integer")
-     */
-    private $traveledDistance;
-
-    /**
-     * Showed consumption in liter / hectometer
-     * @var integer
-     * @ORM\Column(type="integer")
-     */
-    private $showedConsumption;
-
-    /**
-     * Additived fuel
-     * @var bool
+     * Created by saved partial fueling
      * @ORM\Column(type="boolean")
+     * @var bool
      */
-    private $additivedFuel = false;
+    protected $fromPartial = false;
+
 
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return Vehicle
-     */
-    public function getVehicle(): ?Vehicle
-    {
-        return $this->vehicle;
-    }
-
-    /**
-     * @param Vehicle $vehicle
-     * @return Fueling
-     */
-    public function setVehicle(Vehicle $vehicle): Fueling
-    {
-        $this->vehicle = $vehicle;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDate(): ?\DateTime
-    {
-        return $this->date;
-    }
-
-    /**
-     * @param \DateTime $date
-     * @return Fueling
-     */
-    public function setDate(\DateTime $date): Fueling
-    {
-        $this->date = $date;
-        return $this;
-    }
-
-    /**
-     * @return FuelType
-     */
-    public function getFuelType(): ?FuelType
-    {
-        return $this->fuelType;
-    }
-
-    /**
-     * @param FuelType $fuelType
-     * @return Fueling
-     */
-    public function setFuelType(FuelType $fuelType): Fueling
-    {
-        $this->fuelType = $fuelType;
-        return $this;
-    }
-
-    /**
-     * Volume in milliliter
-     * @return int
-     */
-    public function getVolume(): ?int
-    {
-        return $this->volume;
-    }
-
-    /**
-     * @param int $volume
-     * @return Fueling
-     */
-    public function setVolume(int $volume): Fueling
-    {
-        $this->volume = $volume;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getVolumePrice(): ?int
-    {
-        return $this->volumePrice;
-    }
-
-    /**
-     * @param int $volumePrice
-     * @return Fueling
-     */
-    public function setVolumePrice(int $volumePrice): Fueling
-    {
-        $this->volumePrice = $volumePrice;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAmount(): ?int
-    {
-        return $this->amount;
-    }
-
-    /**
-     * @param int $amount
-     * @return Fueling
-     */
-    public function setAmount(int $amount): Fueling
-    {
-        $this->amount = $amount;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTraveledDistance(): ?int
-    {
-        return $this->traveledDistance;
-    }
-
-    /**
-     * @param int $traveledDistance
-     * @return Fueling
-     */
-    public function setTraveledDistance(int $traveledDistance): Fueling
-    {
-        $this->traveledDistance = $traveledDistance;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getShowedConsumption(): ?int
-    {
-        return $this->showedConsumption;
-    }
-
-    /**
-     * @param int $showedConsumption
-     * @return Fueling
-     */
-    public function setShowedConsumption(int $showedConsumption): Fueling
-    {
-        $this->showedConsumption = $showedConsumption;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAdditivedFuel(): bool
-    {
-        return $this->additivedFuel;
-    }
-
-    /**
-     * @param bool $additivedFuel
-     */
-    public function setAdditivedFuel(bool $additivedFuel): void
-    {
-        $this->additivedFuel = $additivedFuel;
     }
 
     /**
@@ -257,5 +44,92 @@ class Fueling
         // (l * 1000) ml / (100km / 1000) hm
         // l/100km
         return $this->volume / $this->traveledDistance;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFromPartial(): bool
+    {
+        return $this->fromPartial;
+    }
+
+    /**
+     * @param bool $fromPartial
+     * @return Fueling
+     */
+    public function setFromPartial(bool $fromPartial): Fueling
+    {
+        $this->fromPartial = $fromPartial;
+        return $this;
+    }
+
+    /**
+     * Complete and create fueling if there are some saved partial fueling
+     * @param LifecycleEventArgs $event
+     * @throws \Doctrine\ORM\ORMException
+     * @ORM\PrePersist
+     */
+    public function completeWithPartial(LifecycleEventArgs $event) {
+        // Do nothing if it's a fueling created from a partial one
+        if ($this->isFromPartial()) {
+            return;
+        }
+        // There is no partial fueling : do nothing
+        $partialFuelings = $event->getEntityManager()->getRepository(PartialFueling::class)->findByVehicle($this->getVehicle());
+        if (empty($partialFuelings) ) {
+            return;
+        }
+        $toCreate = [];
+        $totalDistance = $this->getTraveledDistance();
+        $totalVolume = $this->getVolume();
+        foreach ($partialFuelings as $partialFueling) {
+            $totalDistance += $partialFueling->getTraveledDistance();
+            $totalVolume += $partialFueling->getVolume();
+            $toCreate[] = static::getInstanceFromPartial($partialFueling);
+            // Remove the partial fueling
+            $event->getEntityManager()->remove($partialFueling);
+        }
+        $remainingDistance = $totalDistance;
+        foreach ($toCreate as $fuelingToCreate) {
+            // Calculate the estimated real traveled distance for the complete fueling created from a partial one
+            $fuelingToCreate->setTraveledDistance(static::calculateRealTraveledDistance($fuelingToCreate->getVolume(), $totalDistance, $totalVolume));
+            $remainingDistance -= $fuelingToCreate->getTraveledDistance();
+            $event->getEntityManager()->persist($fuelingToCreate);
+        }
+        // The distance of the new fueling is changed to obtain the "real" consumption
+        $this->setTraveledDistance($remainingDistance);
+    }
+
+    /**
+     * Initialize a new fueling from a partial one
+     * @param PartialFueling $partial
+     * @return Fueling
+     */
+    private static function getInstanceFromPartial(PartialFueling $partial) {
+        $fueling = new Fueling();
+        $fueling->setDate($partial->getDate());
+        $fueling->setAdditivedFuel($partial->isAdditivedFuel());
+        $fueling->setShowedConsumption($partial->getShowedConsumption());
+        $fueling->setAmount($partial->getAmount());
+        $fueling->setVolumePrice($partial->getVolumePrice());
+        $fueling->setVolume($partial->getVolume());
+        $fueling->setFuelType($partial->getFuelType());
+        $fueling->setVehicle($partial->getVehicle());
+        $fueling->setFromPartial(true);
+        return $fueling;
+    }
+
+    /**
+     * Calculate the estimated real traveled distance
+     * with a simply rule of three
+     * We'll get the traveled distance to obtain the same average consumption
+     * @param integer $volume
+     * @param integer $totalTraveledDistance
+     * @param integer $totalVolume
+     * @return integer
+     */
+    private static function calculateRealTraveledDistance(int $volume, int $totalTraveledDistance, int $totalVolume) {
+        return (int) round($volume * $totalTraveledDistance / $totalVolume);
     }
 }
