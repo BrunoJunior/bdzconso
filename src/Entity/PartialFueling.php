@@ -19,7 +19,7 @@ class PartialFueling extends SuperFueling
     /**
      * @return integer
      */
-    public function getId(): ?integer
+    public function getId()
     {
         return $this->id;
     }
