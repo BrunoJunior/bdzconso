@@ -34,7 +34,7 @@
                         <td>{{ fueling.vehicle.manufacturer }} {{ fueling.vehicle.model }}</td>
                     {% endif %}
                     <td>{{ include('parts/fuel.html.twig', { 'fuel': fueling.fuelType, 'additived': fueling.additivedFuel }) }}</td>
-                    <td>{{ (fueling.volume / 1000)|number_format(2,',','') }} l{% if fueling.fromPartial %} <i class="fas fa-battery-half"></i>{% endif %}</td>
+                    <td{% if fueling.fromPartial %} data-toggle="tooltip" data-placement="top" title="{% trans %}Partial fueling{% endtrans %}"{% endif %}>{{ (fueling.volume / 1000)|number_format(2,',','') }} l{% if fueling.fromPartial %} <i class="fas fa-battery-half"></i>{% endif %}</td>
                     <td>{{ (fueling.volumePrice / 1000)|number_format(3,',','') }} €/l</td>
                     <td>{{ (fueling.amount / 100)|number_format(2,',','') }} €</td>
                     <td>{{ (fueling.traveledDistance / 10)|number_format(1,',','') }} km</td>

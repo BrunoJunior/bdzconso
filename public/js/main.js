@@ -29,4 +29,7 @@ $(function () {
         var canvas = $(this);
         new Chart(canvas, canvas.data('canvas'));
     });
+
+    // Tooltips
+    $('[data-toggle="tooltip"]').tooltip();
 });
