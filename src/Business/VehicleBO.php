@@ -48,11 +48,16 @@ class VehicleBO
         $sLabel = $rLabel . ' - ' . $this->translator->trans('Showed');
         $color = new Color($vehicle->getColor());
         $sRConsumptions = new TimeCanvasSerie($rLabel, $color->getRgba());
-        $sSConsumptions = new TimeCanvasSerie($sLabel, $color->getRgba(0.5));
-        $canvas->addSerie($sRConsumptions)->addSerie($sSConsumptions);
+        $canvas->addSerie($sRConsumptions);
+        if ($vehicle->isConsumptionShowed()) {
+            $sSConsumptions = new TimeCanvasSerie($sLabel, $color->getRgba(0.5));
+            $canvas->addSerie($sSConsumptions);
+        }
         foreach ($fuelings as $consumption) {
             $sRConsumptions->addPoint($this->fuelingBO->getRealConsumptionPoint($consumption));
-            $sSConsumptions->addPoint($this->fuelingBO->getShowedConsumptionPoint($consumption));
+            if (isset($sSConsumptions)) {
+                $sSConsumptions->addPoint($this->fuelingBO->getShowedConsumptionPoint($consumption));
+            }
         }
     }
 

@@ -1,18 +1,24 @@
 <div class="conditional_form" {% if hidden is defined and hidden %}style="display:none;"{% endif %}>
     {{ form_start(form) }}
     <div class="row">
-        <div class="col-md-6">{{ form_row(form.date) }}</div>
-        <div class="col-md-6">{{ form_row(form.fuelType) }}{{ form_row(form.additivedFuel) }}</div>
+        <div class="col-md-4">{{ form_row(form.date) }}</div>
+        <div class="col-md-4">{{ form_row(form.fuelType) }}</div>
+        <div class="col-md-4">{{ form_row(form.additivedFuel) }}</div>
     </div>
     <div class="row">
-        <div class="col-md-4" data-calculation="volumePrice" data-type="volume">{{ form_row(form.volume) }}</div>
-        <div class="col-md-4" data-calculation="volumePrice" data-type="amount">{{ form_row(form.amount) }}</div>
-        <div class="col-md-4" data-type="volumePrice">{{ form_row(form.volumePrice) }}</div>
+        <div class="col-md-{% if form.showedConsumption is defined %}4{% else %}3{% endif %}" data-calculation="volumePrice" data-type="volume">{{ form_row(form.volume) }}</div>
+        <div class="col-md-{% if form.showedConsumption is defined %}4{% else %}3{% endif %}" data-calculation="volumePrice" data-type="amount">{{ form_row(form.amount) }}</div>
+        <div class="col-md-{% if form.showedConsumption is defined %}4{% else %}3{% endif %}" data-type="volumePrice">{{ form_row(form.volumePrice) }}</div>
+        {% if form.showedConsumption is not defined %}
+            <div class="col-md-3">{{ form_row(form.traveledDistance) }}</div>
+        {% endif %}
     </div>
-    <div class="row">
-        <div class="col-md-6">{{ form_row(form.traveledDistance) }}</div>
-        <div class="col-md-6">{{ form_row(form.showedConsumption) }}</div>
-    </div>
+    {% if form.showedConsumption is defined %}
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form.traveledDistance) }}</div>
+            <div class="col-md-6">{{ form_row(form.showedConsumption) }}</div>
+        </div>
+    {% endif %}
     <button type="submit" class="btn btn-primary">
         {% trans %}Save{% endtrans %}
     </button>

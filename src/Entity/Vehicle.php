@@ -83,6 +83,12 @@ class Vehicle
     private $partialFuelings;
 
     /**
+     * @var boolean
+     * @ORM\Column(type="boolean", options={"default" : 1})
+     */
+    private $consumptionShowed = true;
+
+    /**
      * Vehicle constructor.
      */
     public function __construct() {
@@ -281,6 +287,24 @@ class Vehicle
     public function setColor(?string $color): Vehicle
     {
         $this->color = $color;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConsumptionShowed(): bool
+    {
+        return $this->consumptionShowed;
+    }
+
+    /**
+     * @param bool $consumptionShowed
+     * @return Vehicle
+     */
+    public function setConsumptionShowed(bool $consumptionShowed): Vehicle
+    {
+        $this->consumptionShowed = $consumptionShowed;
         return $this;
     }
 
