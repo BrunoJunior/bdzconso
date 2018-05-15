@@ -44,22 +44,47 @@ class FuelingRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get Fuelings for a vehicle order by descending dates during the current year
+     * Get Fuelings for a vehicle order by descending dates between $start and $end
+     * By default, load the current year fuelings
      * @param Vehicle $vehicle
+     * @param \DateTime $start
+     * @param \DateTime $end
      * @return Fueling[]
+     * @throws \Exception
      */
-    public function findCurrentYearByVehicle(Vehicle $vehicle) {
-        $limitDate = new \DateTime();
-        $limitDate->sub(new \DateInterval("P1Y"));
+    public function findByVehicleWithDateLimit(Vehicle $vehicle, \DateTime $start = null, \DateTime $end = null) {
+        if ($end === null) {
+            $end = new \DateTime();
+        }
+        if ($start === null) {
+            $start = clone $end;
+            $start->sub(new \DateInterval("P1Y"));
+        }
         return $this->createQueryBuilder('f')
             ->andWhere('f.vehicle = :val')
-            ->andWhere('f.date > :date')
+            ->andWhere('f.date > :start and f.date <= :end')
             ->setParameter('val', $vehicle)
-            ->setParameter('date', $limitDate)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->orderBy('f.date', 'DESC')
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    /**
+     * Get Fuelings for a vehicle order by descending dates for the previous year
+     * @param Vehicle $vehicle
+     * @return Fueling[]
+     * @throws \Exception
+     */
+    public function findPreviousYearByVehicle(Vehicle $vehicle) {
+        $oneYearInterval = new \DateInterval("P1Y");
+        $end = new \DateTime();
+        $end->sub($oneYearInterval);
+        $start = clone $end;
+        $start->sub($oneYearInterval);
+        return $this->findByVehicleWithDateLimit($vehicle, $start, $end);
     }
 
     /**

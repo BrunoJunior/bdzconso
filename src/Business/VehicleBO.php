@@ -64,6 +64,31 @@ class VehicleBO
     /**
      * @param Vehicle $vehicle
      * @param array $fuelings
+     * @param array $fuelingsPrevYear
+     * @param TimeCanvas $canvas
+     * @throws \Exception
+     */
+    public function fillComparativeCanvas(Vehicle $vehicle, array $fuelings, array $fuelingsPrevYear, TimeCanvas $canvas) {
+        $rLabel = $vehicle->getManufacturer() . ' ' . $vehicle->getModel();
+        $sLabel = $vehicle->getManufacturer() . ' ' . $vehicle->getModel() . ' - ' . $this->translator->trans('Previous year');
+        $color = new Color($vehicle->getColor());
+        $sConsumption = new TimeCanvasSerie($rLabel, $color->getRgba());
+        $sPrevYearConsumption = new TimeCanvasSerie($sLabel, $color->getRgba(0.5));
+        $canvas->addSerie($sConsumption);
+        $canvas->addSerie($sPrevYearConsumption);
+        foreach ($fuelings as $consumption) {
+            $point = $this->fuelingBO->getRealConsumptionPoint($consumption);
+            $point->getDate()->sub(new \DateInterval('P1Y'));
+            $sConsumption->addPoint($point);
+        }
+        foreach ($fuelingsPrevYear as $consumption) {
+            $sPrevYearConsumption->addPoint($this->fuelingBO->getRealConsumptionPoint($consumption));
+        }
+    }
+
+    /**
+     * @param Vehicle $vehicle
+     * @param array $fuelings
      * @param TimeCanvas $canvas
      */
     public function fillAmountCanvas(Vehicle $vehicle, array $fuelings, TimeCanvas $canvas) {

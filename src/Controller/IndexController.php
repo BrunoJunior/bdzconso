@@ -24,26 +24,36 @@ class IndexController extends Controller
     }
 
     /**
-     * @param TimeCanvas $canvas
      * @param VehicleBO $vehicleBO
      * @param TranslatorInterface $translator
      * @return Response
      * @Route("/account", name="my_account")
+     * @throws \Exception
      */
-    public function account(TimeCanvas $canvas, VehicleBO $vehicleBO, TranslatorInterface $translator)
+    public function account(VehicleBO $vehicleBO, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
-        $canvas
+        $consumptionCanvas = TimeCanvas::getInstance()
             ->setName($translator->trans("Consumptions"))
             ->setYScaleLabel($translator->trans('Consumption %unit%', ['%unit%' => 'l/100km']));
+        $comparativeCanvas = TimeCanvas::getInstance()
+            ->setName($translator->trans("Comparative consumption"))
+            ->setYScaleLabel($translator->trans('Consumption %unit%', ['%unit%' => 'l/100km']))
+            ->addDisplayFormat('month', 'MMM')
+            ->setTooltipFormat('DD/MM');
+
         $fuelingRepo = $this->getDoctrine()->getRepository(Fueling::class);
         $vehicles = $this->getUser()->getVehicles();
         foreach ($vehicles as $vehicle) {
-            $vehicleBO->fillConsumptionCanvas($vehicle, $fuelingRepo->findCurrentYearByVehicle($vehicle), $canvas);
+            $vehicleBO->fillConsumptionCanvas($vehicle, $fuelingRepo->findByVehicleWithDateLimit($vehicle), $consumptionCanvas);
+            $vehicleBO->fillComparativeCanvas($vehicle, $fuelingRepo->findByVehicleWithDateLimit($vehicle), $fuelingRepo->findPreviousYearByVehicle($vehicle), $comparativeCanvas);
         }
         $params = [
             'vehicles' => $vehicles,
-            'canvas' => $canvas
+            'canvasList' => [
+                $consumptionCanvas,
+                $comparativeCanvas
+            ]
         ];
         return $this->render('index/account.html.twig', $params);
     }

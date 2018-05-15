@@ -47,7 +47,7 @@ class StatsController extends Controller
 
         $vehicles = $this->getUser()->getVehicles();
         foreach ($vehicles as $vehicle) {
-            $fuelings = $rFueling->findCurrentYearByVehicle($vehicle);
+            $fuelings = $rFueling->findByVehicleWithDateLimit($vehicle);
             $vehicleBO->fillConsumptionCanvas($vehicle, $fuelings, $canvasConsumption);
             $vehicleBO->fillAmountCanvas($vehicle, $fuelings, $canvasVolume);
         }

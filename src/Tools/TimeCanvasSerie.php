@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class TimeCanvasSerie implements \JsonSerializable
 {
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|TimeCanvasPoint[]
      */
     private $points;
 
@@ -29,6 +29,11 @@ class TimeCanvasSerie implements \JsonSerializable
     private $color;
 
     /**
+     * @var TimeCanvas
+     */
+    private $canvas;
+
+    /**
      * TimeCanvasSerie constructor.
      */
     public function __construct(string $label, string $color)
@@ -41,19 +46,39 @@ class TimeCanvasSerie implements \JsonSerializable
     /**
      * Add a point
      * @param TimeCanvasPoint $point
+     * @param string
      * @return $this
      */
-    public function addPoint(TimeCanvasPoint $point) {
-        $this->points->add($point);
+    public function addPoint(TimeCanvasPoint $point): TimeCanvasSerie
+    {
+        $this->points->add($point->setSerie($this));
         return $this;
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|TimeCanvasPoint[]
      */
     public function getPoints(): ArrayCollection
     {
         return $this->points;
+    }
+
+    /**
+     * @return TimeCanvas
+     */
+    public function getCanvas(): ?TimeCanvas
+    {
+        return $this->canvas;
+    }
+
+    /**
+     * @param TimeCanvas $canvas
+     * @return TimeCanvasSerie
+     */
+    public function setCanvas(TimeCanvas $canvas): TimeCanvasSerie
+    {
+        $this->canvas = $canvas;
+        return $this;
     }
 
     /**

@@ -24,13 +24,18 @@ class TimeCanvasPoint implements \JsonSerializable
     private $value;
 
     /**
+     * @var TimeCanvasSerie
+     */
+    private $serie;
+
+    /**
      * TimeCanvasPoint constructor.
      * @param \DateTime $date
      * @param float $value
      */
     public function __construct(\DateTime $date, float $value)
     {
-        $this->date = $date;
+        $this->date = clone $date;
         $this->value = $value;
     }
 
@@ -48,7 +53,7 @@ class TimeCanvasPoint implements \JsonSerializable
      */
     public function setDate(\DateTime $date): TimeCanvasPoint
     {
-        $this->date = $date;
+        $this->date = clone $date;
         return $this;
     }
 
@@ -67,6 +72,24 @@ class TimeCanvasPoint implements \JsonSerializable
     public function setValue(float $value): TimeCanvasPoint
     {
         $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * @return TimeCanvasSerie
+     */
+    public function getSerie(): ?TimeCanvasSerie
+    {
+        return $this->serie;
+    }
+
+    /**
+     * @param TimeCanvasSerie $serie
+     * @return TimeCanvasPoint
+     */
+    public function setSerie(TimeCanvasSerie $serie): TimeCanvasPoint
+    {
+        $this->serie = $serie;
         return $this;
     }
 
