@@ -3,18 +3,15 @@
 namespace App\Form;
 
 use App\Entity\PartialFueling;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PartialFuelingType extends AbstractFuelingType
 {
     /**
-     * For partial fueling entity
-     * @param OptionsResolver $resolver
+     * The entity classname
+     * @return string
      */
-    public function configureOptions(OptionsResolver $resolver)
+    protected function getEntityClass()
     {
-        $resolver->setDefaults([
-            'data_class' => PartialFueling::class,
-        ]);
+        return PartialFueling::class;
     }
 }

@@ -7,6 +7,7 @@ use App\Entity\Fueling;
 use App\Entity\FuelType;
 use App\Entity\PartialFueling;
 use App\Entity\Vehicle;
+use App\Form\AbstractFuelingType;
 use App\Form\FuelingImportType;
 use App\Form\FuelingType;
 use App\Form\PartialFuelingType;
@@ -101,8 +102,8 @@ class VehicleController extends Controller
             $fueling->setFuelType($preferedFuelType);
             $partialFueling->setFuelType($preferedFuelType);
         }
-        $form = $this->createForm(FuelingType::class, $fueling);
-        $formPartial = $this->createForm(PartialFuelingType::class, $partialFueling);
+        $form = $this->createForm(FuelingType::class, $fueling, [AbstractFuelingType::OPTION_CONSUMPTION_SHOWED => $vehicle->isConsumptionShowed()]);
+        $formPartial = $this->createForm(PartialFuelingType::class, $partialFueling, [AbstractFuelingType::OPTION_CONSUMPTION_SHOWED => $vehicle->isConsumptionShowed()]);
 
         $form->handleRequest($request);
         $formPartial->handleRequest($request);

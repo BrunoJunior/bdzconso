@@ -12,7 +12,7 @@ class TimeCanvas implements \JsonSerializable
 {
 
     /**
-     * @var array
+     * @var array|TimeCanvasSerie[]
      */
     private $series = [];
 
@@ -25,6 +25,24 @@ class TimeCanvas implements \JsonSerializable
      * @var string
      */
     private $yScaleLabel;
+
+    /**
+     * @var array
+     */
+    private $displayFormats = [];
+
+    /**
+     * @var string
+     */
+    private $tooltipFormat = 'L';
+
+    /**
+     * @return TimeCanvas
+     */
+    public static function getInstance(): TimeCanvas
+    {
+        return new static();
+    }
 
     /**
      * @return string
@@ -49,12 +67,12 @@ class TimeCanvas implements \JsonSerializable
      * @return $this
      */
     public function addSerie(TimeCanvasSerie $serie) {
-        $this->series[] = $serie;
+        $this->series[] = $serie->setCanvas($this);
         return $this;
     }
 
     /**
-     * @return array
+     * @return array|TimeCanvasSerie[]
      */
     public function getSeries(): array
     {
@@ -88,6 +106,50 @@ class TimeCanvas implements \JsonSerializable
     }
 
     /**
+     * @param string $name
+     * @param string $format
+     * @return $this
+     */
+    public function addDisplayFormat(string $name, string $format): TimeCanvas
+    {
+        $this->displayFormats[$name] = $format;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDisplayFormats(): array
+    {
+        return $this->displayFormats;
+    }
+
+    /**
+     * @param string $tooltipFormat
+     * @return TimeCanvas
+     */
+    public function setTooltipFormat(string $tooltipFormat): TimeCanvas
+    {
+        $this->tooltipFormat = $tooltipFormat;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    private function getXAxesTime() :array
+    {
+        $time = [
+            'unit' => 'month',
+            'tooltipFormat' => $this->tooltipFormat
+        ];
+        if (count($this->displayFormats) > 0) {
+            $time['displayFormats'] = $this->getDisplayFormats();
+        }
+        return $time;
+    }
+
+    /**
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
@@ -110,7 +172,7 @@ class TimeCanvas implements \JsonSerializable
                         [
                             'type' => 'time',
                             'gridLines' => ['display' => false],
-                            'time' => ['unit' => 'month', 'tooltipFormat' => 'L'],
+                            'time' => $this->getXAxesTime(),
                             'scaleLabel' => ['display' => false]
                         ]
                     ],

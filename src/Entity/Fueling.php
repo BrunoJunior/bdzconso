@@ -21,7 +21,7 @@ class Fueling extends SuperFueling
 
     /**
      * Created by saved partial fueling
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default" : 0})
      * @var bool
      */
     protected $fromPartial = false;

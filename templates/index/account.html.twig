@@ -24,13 +24,14 @@
             {% endfor %}
         </div>
     </fieldset>
-
-    <fieldset class="mb-3">
-        <legend>
-            {% trans %}Consumptions{% endtrans %}
-        </legend>
-        <div class="chart-container">
-            <canvas class="chart" data-canvas="{{ canvas.json }}"></canvas>
-        </div>
-    </fieldset>
+    {% for canvas in canvasList %}
+        <fieldset class="mb-3">
+            <legend>
+                {{ canvas.name }}
+            </legend>
+            <div class="chart-container">
+                <canvas class="chart" data-canvas="{{ canvas.json }}"></canvas>
+            </div>
+        </fieldset>
+    {% endfor %}
 {% endblock %}

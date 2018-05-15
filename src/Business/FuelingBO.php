@@ -145,7 +145,8 @@ class FuelingBO
      */
     public function getShowedConsumptionPoint(Fueling $fueling): TimeCanvasPoint
     {
-        return new TimeCanvasPoint($fueling->getDate(), round($fueling->getShowedConsumption() / 10.0, 2));
+        $showedConsumption = $fueling->getVehicle()->isConsumptionShowed() ? $fueling->getShowedConsumption() : 0.0;
+        return new TimeCanvasPoint($fueling->getDate(), round($showedConsumption / 10.0, 2));
     }
 
     /**

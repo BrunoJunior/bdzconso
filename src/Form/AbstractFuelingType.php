@@ -10,15 +10,19 @@ namespace App\Form;
 
 use App\Entity\FuelType;
 use App\Form\Type\NumberType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractFuelingType extends AbstractType
 {
+    const OPTION_CONSUMPTION_SHOWED = 'consumption_showed';
+
     /**
      * Build form
      * @param FormBuilderInterface $builder
@@ -49,18 +53,23 @@ abstract class AbstractFuelingType extends AbstractType
                 'choice_label' => 'name',
                 'required' => true
             ])
-            ->add('additivedFuel', CheckboxType::class, [
-                'required' => false
+            ->add('additivedFuel', ChoiceType::class, [
+                'choices'  => array(
+                    'No' => false,
+                    'Yes' => true,
+                ),
             ])
             ->add('traveledDistance', NumberType::class, [
                 'divisor' => 10,
                 'scale' => 1
-            ])
-            ->add('showedConsumption', NumberType::class, [
+            ]);
+        $hOptions = new ArrayCollection($options);
+        if ($hOptions->get(static::OPTION_CONSUMPTION_SHOWED) === true) {
+            $builder->add('showedConsumption', NumberType::class, [
                 'divisor' => 10,
                 'scale' => 1
             ]);
-        ;
+        }
         $this->completeForm($builder, $options);
     }
 
@@ -72,4 +81,18 @@ abstract class AbstractFuelingType extends AbstractType
     protected function completeForm(FormBuilderInterface $builder, array $options) {
         return;
     }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => $this->getEntityClass(),
+            static::OPTION_CONSUMPTION_SHOWED => true
+        ]);
+    }
+
+    /**
+     * The entity classname
+     * @return string
+     */
+    abstract protected function getEntityClass();
 }

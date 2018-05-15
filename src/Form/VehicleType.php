@@ -4,8 +4,11 @@ namespace App\Form;
 
 use App\Entity\FuelType;
 use App\Entity\Vehicle;
+use Doctrine\DBAL\Types\BooleanType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,6 +37,12 @@ class VehicleType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'required' => false
+            ])
+            ->add('consumptionShowed', ChoiceType::class, [
+                'choices'  => array(
+                    'Yes' => true,
+                    'No' => false,
+                ),
             ])
         ;
     }
