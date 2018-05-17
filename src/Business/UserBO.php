@@ -85,7 +85,7 @@ class UserBO
             $api->setUser($user);
             // Generate a random api key, retry until generate an unique one
             do {
-                $apiKey = base64_encode(random_bytes(10));
+                $apiKey = base64_encode($user->getId() . random_bytes(10) . $user->getId());
             } while ($this->entityManager->getRepository(UserApi::class)->isApiKeyExists($apiKey));
             $api->setApiKey($apiKey);
             $this->entityManager->persist($api);

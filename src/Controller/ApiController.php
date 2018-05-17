@@ -8,12 +8,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class ApiController extends Controller
 {
     /**
-     * @Route("/api", name="api")
+     * @Route("/api/index", name="api")
      */
     public function index()
     {
-        return $this->render('api/view.html.twig', [
-            'controller_name' => 'ApiController',
+        return $this->json([
+            'result' => true,
+            'user' => $this->getUser()->getId()
         ]);
     }
 }

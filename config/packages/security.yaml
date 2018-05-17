@@ -4,11 +4,19 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         database_users:
-            entity: { class: App\Entity\User, property: email }
+            entity:
+                class: App\Entity\User
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern: ^/api/
+            anonymous: false
+            stateless: true
+            guard:
+                authenticators:
+                    - App\Security\ApiAuthenticator
         main:
             # les urls auxquels s'appliquent ce firewall, dans ce cas, ce sont toutes les urls
             pattern: ^/
@@ -44,3 +52,4 @@ security:
         # Là dans ce cas seul les utilisateurs ayant le rôle ROLE_ADMIN
         # peuvent acceder à toutes les pages commençant par /admin
         - { path: '^/admin', roles: ROLE_ADMIN }
+        - { path: '^/api', roles: IS_AUTHENTICATED_FULLY }
