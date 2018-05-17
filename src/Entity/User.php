@@ -62,13 +62,24 @@ class User implements UserInterface, \Serializable
      *
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private $roles = ['ROLE_USER'];
 
     /**
      * @var Collection|Vehicle[]
      * @ORM\OneToMany(targetEntity="App\Entity\Vehicle",mappedBy="user", cascade={"remove"})
      */
     private $vehicles;
+
+    /**
+     * @var UserApi
+     * @ORM\OneToOne(targetEntity="UserApi", mappedBy="user")
+     */
+    private $api;
+
+    /**
+     * @var bool
+     */
+    private $apiActivated;
 
     /**
      * User constructor.
@@ -256,6 +267,37 @@ class User implements UserInterface, \Serializable
     public function getVehicles(): Collection
     {
         return $this->vehicles;
+    }
+
+    /**
+     * @return UserApi
+     */
+    public function getApi(): ?UserApi
+    {
+        return $this->api;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isApiActivated()
+    {
+        if ($this->apiActivated === null) {
+            $api = $this->getApi();
+            $this->apiActivated = $api instanceof UserApi && $api->getId() > 0;
+        }
+        return $this->apiActivated;
+    }
+
+    /**
+     * Useless but easy form mapping
+     * @param bool $apiActivated
+     * @return $this
+     */
+    public function setApiActivated(bool $apiActivated): User
+    {
+        $this->apiActivated = $apiActivated;
+        return $this;
     }
 
 }

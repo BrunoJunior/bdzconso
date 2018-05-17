@@ -16,7 +16,8 @@
                     <th scope="col"><i class="fas fa-at"></i> {% trans %}Email{% endtrans %}</th>
                     <th scope="col">{% trans %}Firstname{% endtrans %}</th>
                     <th scope="col">{% trans %}Lastname{% endtrans %}</th>
-                    <th scope="col"><i class="fas fa-key"></i> {% trans %}Roles{% endtrans %}</th>
+                    <th scope="col"><i class="fas fa-signal"></i> {% trans %}Roles{% endtrans %}</th>
+                    <th scope="col"><i class="fas fa-key"></i> {% trans %}API key{% endtrans %}</th>
                     <th scope="col"><i class="fas fa-location-arrow"></i> {% trans %}Actions{% endtrans %}</th>
                 </tr>
                 </thead>
@@ -28,6 +29,7 @@
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
                         <td>{{ user.roles|join(', ')}}</td>
+                        <td>{% if user.api.apiKey is defined %}{{ user.api.apiKey}}{% else %}<i class="fas fa-ban"></i>{% endif %}</td>
                         <td>
                             <a class="btn btn-primary btn-sm" href="{{ path('admin_user', {'id': user.id}) }}" role="button"><i class="fas fa-edit"></i> </a>
                             <a class="btn btn-danger btn-sm" href="{{ path('delete_user', {'id': user.id}) }}" role="button" data-confirm=true><i class="fas fa-trash"></i> </a>

@@ -2,35 +2,56 @@
 
 namespace App\Controller;
 
+use App\Business\UserBO;
 use App\Entity\User;
 use App\Form\UserType;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends Controller
 {
 
     /**
-     * @Route("/account/edit", name="my_account_edit")
+     * @var UserBO
      */
-    public function show(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
-        return $this->edit($request, $passwordEncoder, $this->getUser());
+    private $userBO;
+
+    /**
+     * UserController constructor.
+     * @param UserBO $userBO
+     */
+    public function __construct(UserBO $userBO)
+    {
+        $this->userBO = $userBO;
     }
 
     /**
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     * @Route("/account/edit", name="my_account_edit")
+     */
+    public function show(Request $request) {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
+        return $this->edit($request, $this->getUser());
+    }
+
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return Response
+     * @throws \Exception
      * @Route("/user/{id}", name="admin_user",
      *     defaults={"id"= 0},
      *     requirements={
      *         "id": "\d+"
      *     })
      */
-    public function edit(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user = null)
+    public function edit(Request $request, User $user = null)
     {
-        if ($user === null || $this->getUser()->getId() !== $user->getId()) {
+        if ($user === null || $this->getUser() === null || $this->getUser()->getId() !== $user->getId()) {
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
         }
         if ($user === null) {
@@ -39,18 +60,13 @@ class UserController extends Controller
         $form = $this->createForm(UserType::class, $user, ['admin' => $this->isGranted('ROLE_ADMIN'), 'edit' => $user->getId() > 0]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $form->get('password');
-            if (!$password->isEmpty()) {
-                $user->setPassword($passwordEncoder->encodePassword($user, $password->getData()));
-            }
-            // Par defaut l'utilisateur aura toujours le rôle ROLE_USER
-            $roles = new ArrayCollection($user->getRoles());
-            if ($roles->isEmpty()) {
-                $user->setRoles(['ROLE_USER']);
-            }
-            // On enregistre l'utilisateur dans la base
+            $this->userBO->encodeAndSetPassword($user, $form->get('password')->getData());
+            // Saving user in DB
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
+            // Activate or deactivate API for the user
+            $activateApi = (bool) $form->get('apiActivated')->getData();
+            $this->userBO->manageApiKey($user, $activateApi);
             $em->flush();
 
             if ($this->isGranted('ROLE_ADMIN')) {
@@ -61,10 +77,16 @@ class UserController extends Controller
 
         return $this->render(
             'user/edit.html.twig',
-            ['form' => $form->createView(), 'new' => $user->getId() == 0 ]
+            [
+                'form' => $form->createView(),
+                'new' => $user->getId() == 0,
+                'user' => $user
+            ]
         );
     }
     /**
+     * @param User $user
+     * @return Response
      * @Route("/user/{id}/delete", name="delete_user")
      */
     public function delete(User $user)

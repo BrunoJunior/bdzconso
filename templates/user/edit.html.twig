@@ -19,6 +19,15 @@
                 <div class="col-md-6">{{ form_row(form.password.first) }}</div>
                 <div class="col-md-6">{{ form_row(form.password.second) }}</div>
         </div>
+        <div class="row">
+            <div class="col-md-6">{{ form_row(form.apiActivated) }}</div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-control-label" for="user_api">{% trans %}API key{% endtrans %}</label>
+                    <input id="user_api" name="user[api]" class="form-control" type="text" disabled="disabled" value="{% if user.api.apiKey is defined %}{{ user.api.apiKey }}{% endif %}" />
+                </div>
+            </div>
+        </div>
         {% if form.roles is defined %}
             {{ form_row(form.roles) }}
         {% endif %}
