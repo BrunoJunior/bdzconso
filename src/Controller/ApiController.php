@@ -2,19 +2,48 @@
 
 namespace App\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
+use JMS\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ApiController extends Controller
+/**
+ * Class ApiController
+ * @package App\Controller
+ */
+abstract class ApiController extends Controller
 {
     /**
-     * @Route("/api/index", name="api")
+     * @var SerializerInterface
      */
-    public function index()
+    private $serializer;
+
+    /**
+     * ApiController constructor.
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(SerializerInterface $serializer)
     {
-        return $this->json([
-            'result' => true,
-            'user' => $this->getUser()->getId()
-        ]);
+        $this->serializer = $serializer;
+    }
+
+    /**
+     * @return SerializerInterface
+     */
+    protected function getSerializer(): SerializerInterface
+    {
+        return $this->serializer;
+    }
+
+    /**
+     * @param $data
+     * @param int $status
+     * @param array $headers
+     * @param array $context
+     * @return JsonResponse
+     */
+    protected function json($data, int $status = 200, array $headers = array(), array $context = array()): JsonResponse
+    {
+        $json = $this->serializer->serialize($data, 'json');
+        return new JsonResponse($json, $status, $headers, true);
     }
 }

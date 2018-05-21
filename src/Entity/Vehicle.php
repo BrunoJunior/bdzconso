@@ -6,11 +6,13 @@ use App\Validator\VehicleValidator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VehicleRepository")
+ * @Serializer\ExclusionPolicy("ALL")
  */
 class Vehicle
 {
@@ -19,11 +21,13 @@ class Vehicle
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Serializer\Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string")
+     * @Serializer\Expose
      * @var string
      */
     private $manufacturer;
@@ -31,12 +35,14 @@ class Vehicle
     /**
      * @var string
      * @ORM\Column(type="string")
+     * @Serializer\Expose
      */
     private $model;
 
     /**
      * @var integer
      * @ORM\Column(type="integer")
+     * @Serializer\Expose
      */
     private $year;
 
@@ -54,6 +60,7 @@ class Vehicle
      *      joinColumns={@ORM\JoinColumn(name="vehicle_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="fuel_type_id", referencedColumnName="id")}
      *      )
+     * @Serializer\Expose
      */
     private $compatibleFuels;
 
@@ -67,12 +74,14 @@ class Vehicle
      * @var FuelType
      * @ORM\ManyToOne(targetEntity="App\Entity\FuelType")
      * @ORM\JoinColumn(name="preferred_fuel_type_id", referencedColumnName="id", nullable=true)
+     * @Serializer\Expose
      */
     private $preferredFuelType;
 
     /**
      * @var string
      * @ORM\Column(type="string", nullable=true)
+     * @Serializer\Expose
      */
     private $color;
 
@@ -85,6 +94,7 @@ class Vehicle
     /**
      * @var boolean
      * @ORM\Column(type="boolean", options={"default" : 1})
+     * @Serializer\Expose
      */
     private $consumptionShowed = true;
 
