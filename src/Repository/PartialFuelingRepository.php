@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\PartialFueling;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @method PartialFueling|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class PartialFuelingRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PartialFueling::class);
     }
@@ -25,8 +25,7 @@ class PartialFuelingRepository extends ServiceEntityRepository
      * @param Vehicle $vehicle
      * @return PartialFueling[] Returns an array of PartialFueling objects
      */
-    public function findByVehicle(Vehicle $vehicle)
-    {
+    public function findByVehicle(Vehicle $vehicle): array {
         return $this->createQueryBuilder('p')
             ->andWhere('p.vehicle = :val')
             ->setParameter('val', $vehicle)

@@ -6,9 +6,13 @@ use App\Entity\Fueling;
 use App\Entity\FuelType;
 use App\Entity\User;
 use App\Entity\Vehicle;
+use DateInterval;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Exception;
 
 /**
  * @method Fueling|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,7 +23,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 class FuelingRepository extends ServiceEntityRepository
 {
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Fueling::class);
     }
@@ -31,7 +35,7 @@ class FuelingRepository extends ServiceEntityRepository
      * @param int $maxByPage
      * @return Fueling[]
      */
-    public function findByVehicle(Vehicle $vehicle, $pageNumber = 1, $maxByPage = 10) {
+    public function findByVehicle(Vehicle $vehicle, $pageNumber = 1, $maxByPage = 10): array {
         return $this->createQueryBuilder('f')
             ->andWhere('f.vehicle = :val')
             ->setParameter('val', $vehicle)
@@ -47,18 +51,17 @@ class FuelingRepository extends ServiceEntityRepository
      * Get Fuelings for a vehicle order by descending dates between $start and $end
      * By default, load the current year fuelings
      * @param Vehicle $vehicle
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param DateTime|null $start
+     * @param DateTime|null $end
      * @return Fueling[]
-     * @throws \Exception
      */
-    public function findByVehicleWithDateLimit(Vehicle $vehicle, \DateTime $start = null, \DateTime $end = null) {
+    public function findByVehicleWithDateLimit(Vehicle $vehicle, DateTime $start = null, DateTime $end = null): array {
         if ($end === null) {
-            $end = new \DateTime();
+            $end = new DateTime();
         }
         if ($start === null) {
             $start = clone $end;
-            $start->sub(new \DateInterval("P1Y"));
+            $start->sub(new DateInterval("P1Y"));
         }
         return $this->createQueryBuilder('f')
             ->andWhere('f.vehicle = :val')
@@ -76,11 +79,11 @@ class FuelingRepository extends ServiceEntityRepository
      * Get Fuelings for a vehicle order by descending dates for the previous year
      * @param Vehicle $vehicle
      * @return Fueling[]
-     * @throws \Exception
+     * @throws Exception
      */
-    public function findPreviousYearByVehicle(Vehicle $vehicle) {
-        $oneYearInterval = new \DateInterval("P1Y");
-        $end = new \DateTime();
+    public function findPreviousYearByVehicle(Vehicle $vehicle): array {
+        $oneYearInterval = new DateInterval("P1Y");
+        $end = new DateTime();
         $end->sub($oneYearInterval);
         $start = clone $end;
         $start->sub($oneYearInterval);
@@ -89,12 +92,12 @@ class FuelingRepository extends ServiceEntityRepository
 
     /**
      * Get Fuelings for a user order by descending dates during the current year
-     * @param Vehicle $vehicle
+     * @param User $user
      * @return Fueling[]
      */
-    public function findCurrentYearByUser(User $user) {
-        $limitDate = new \DateTime();
-        $limitDate->sub(new \DateInterval("P1Y"));
+    public function findCurrentYearByUser(User $user): array {
+        $limitDate = new DateTime();
+        $limitDate->sub(new DateInterval("P1Y"));
         return $this->createQueryBuilder('f')
             ->innerJoin('f.vehicle', 'v')
             ->andWhere('v.user = :val')
@@ -111,33 +114,33 @@ class FuelingRepository extends ServiceEntityRepository
      * Count the number of fuelings for a vehicle
      * @param Vehicle $vehicle
      * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function countByVehicle(Vehicle $vehicle):int {
-        $resultat = $this->createQueryBuilder('f')
+        return $this->createQueryBuilder('f')
             ->select('COUNT(f)')
             ->andWhere('f.vehicle = :val')
             ->setParameter('val', $vehicle)
             ->getQuery()
             ->getSingleScalarResult();
-        return $resultat;
     }
 
     /**
      * Count the number of fuelings for a user
      * @param User $user
      * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function countByUser(User $user):int {
-        $resultat = $this->createQueryBuilder('f')
+        return $this->createQueryBuilder('f')
             ->select('COUNT(f)')
             ->innerJoin('f.vehicle', 'v')
             ->andWhere('v.user = :val')
             ->setParameter('val', $user)
             ->getQuery()
             ->getSingleScalarResult();
-        return $resultat;
     }
 
     /**
@@ -147,7 +150,7 @@ class FuelingRepository extends ServiceEntityRepository
      * @param int $maxByPage
      * @return Fueling[]
      */
-    public function findByUser(User $user, $pageNumber = 1, $maxByPage = 10) {
+    public function findByUser(User $user, $pageNumber = 1, $maxByPage = 10): array {
         return $this->createQueryBuilder('f')
             ->innerJoin('f.vehicle', 'v')
             ->andWhere('v.user = :val')
@@ -161,8 +164,10 @@ class FuelingRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param User|null $user
      * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function getTotalTraveledDistance(User $user = null) {
         $builder = $this->createQueryBuilder('f')
@@ -176,8 +181,10 @@ class FuelingRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param User|null $user
      * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function getTotalConsumedVolume(User $user = null) {
         $builder = $this->createQueryBuilder('f')
@@ -191,8 +198,10 @@ class FuelingRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param User|null $user
      * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function getTotalAmount(User $user = null) {
         $builder = $this->createQueryBuilder('f')
@@ -210,7 +219,7 @@ class FuelingRepository extends ServiceEntityRepository
      * @param FuelType $fuelType
      * @return array
      */
-    public function getAverageVolumePrices(FuelType $fuelType) {
+    public function getAverageVolumePrices(FuelType $fuelType): array {
         return $this->createQueryBuilder('f')
             ->select('AVG(f.volumePrice) AS volumePrice, f.date')
             ->andWhere('f.fuelType = :val')

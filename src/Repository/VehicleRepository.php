@@ -5,7 +5,9 @@ namespace App\Repository;
 use App\Entity\User;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @method Vehicle|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,7 +17,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class VehicleRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Vehicle::class);
     }
@@ -24,16 +26,16 @@ class VehicleRepository extends ServiceEntityRepository
      * Count the number of vehicles for a user
      * @param User $user
      * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function countByUser(User $user):int {
-        $resultat = $this->createQueryBuilder('v')
+        return $this->createQueryBuilder('v')
             ->select('COUNT(v)')
             ->andWhere('v.user = :val')
             ->setParameter('val', $user)
             ->getQuery()
             ->getSingleScalarResult();
-        return $resultat;
     }
 
 //    /**

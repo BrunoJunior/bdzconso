@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }
@@ -25,8 +25,7 @@ class UserRepository extends ServiceEntityRepository
      * @param int $maxByPage
      * @return User[] Returns an array of User objects
      */
-    public function findAllPaginate($pageNumber = 1, $maxByPage = 5)
-    {
+    public function findAllPaginate($pageNumber = 1, $maxByPage = 5): array {
         return $this->createQueryBuilder('u')
             ->orderBy('u.email', 'ASC')
             ->setFirstResult(($pageNumber - 1) * $maxByPage)

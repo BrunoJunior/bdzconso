@@ -4,7 +4,8 @@ namespace App\Repository;
 
 use App\Entity\FuelType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * @method FuelType|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,7 +15,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class FuelTypeRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, FuelType::class);
     }
@@ -40,7 +41,7 @@ class FuelTypeRepository extends ServiceEntityRepository
      * Find fuel type by its name
      * @param string $name
      * @return FuelType|null
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function findByName(string $name): ?FuelType
     {

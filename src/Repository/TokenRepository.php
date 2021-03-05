@@ -4,9 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Token;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @method Token|null find($id, $lockMode = null, $lockVersion = null)
@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class TokenRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Token::class);
     }
@@ -27,8 +27,7 @@ class TokenRepository extends ServiceEntityRepository
      * @return Token Returns a Token object
      * @throws NonUniqueResultException|NoResultException
      */
-    public function findOneByKey(string $key)
-    {
+    public function findOneByKey(string $key): Token {
         return $this->createQueryBuilder('t')
             ->andWhere('t.token_key = :val')
             ->setParameter('val', $key)

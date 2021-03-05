@@ -12,30 +12,32 @@ namespace App\Business;
 use App\Entity\Token;
 use App\Exception\TokenException;
 use App\Repository\TokenRepository;
-use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use DateInterval;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class TokenBO
 {
 
     /**
      * The entity manager
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     /**
      * DAO Token
      * @var TokenRepository
      */
-    private $repository;
+    private TokenRepository $repository;
 
     /**
      * TokenBO constructor.
-     * @param ObjectManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param TokenRepository $repository
      */
-    public function __construct(ObjectManager $entityManager, TokenRepository $repository)
+    public function __construct(EntityManagerInterface $entityManager, TokenRepository $repository)
     {
         $this->entityManager = $entityManager;
         $this->repository = $repository;
@@ -45,9 +47,9 @@ class TokenBO
      * Is the token still valid ?
      * @param Token $token
      * @return bool
-     * @throws \Exception|TokenException
+     * @throws Exception|TokenException
      */
-    public function isValid(Token $token) {
+    public function isValid(Token $token): bool {
         if ($token->isValidated()) {
             throw new TokenException("Token already validated!");
         }
@@ -55,8 +57,8 @@ class TokenBO
             return true;
         }
         $cDate = clone $token->getCreatedAt();
-        $cDate->add(new \DateInterval('PT' . $token->getTimeLimit() . 'S'));
-        $now = new \DateTime();
+        $cDate->add(new DateInterval('PT' . $token->getTimeLimit() . 'S'));
+        $now = new DateTime();
         return $cDate > $now;
     }
 

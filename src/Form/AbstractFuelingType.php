@@ -39,7 +39,8 @@ abstract class AbstractFuelingType extends AbstractType
             ])
             ->add('volume', NumberType::class, [
                 'divisor' => 1000,
-                'scale' => 2
+                'scale' => 2,
+                'html5' => true,
             ])
             ->add('volumePrice', MoneyType::class, [
                 'divisor' => 1000,
@@ -61,7 +62,8 @@ abstract class AbstractFuelingType extends AbstractType
             ])
             ->add('traveledDistance', NumberType::class, [
                 'divisor' => 10,
-                'scale' => 1
+                'scale' => 1,
+                'html5' => true,
             ]);
         $hOptions = new ArrayCollection($options);
         if ($hOptions->get(static::OPTION_CONSUMPTION_SHOWED) === true) {

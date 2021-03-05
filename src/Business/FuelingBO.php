@@ -11,12 +11,13 @@ namespace App\Business;
 
 use App\Entity\Fueling;
 use App\Entity\FuelType;
-use App\Entity\PartialFueling;
 use App\Entity\Vehicle;
 use App\Repository\FuelTypeRepository;
-use App\Repository\PartialFuelingRepository;
 use App\Tools\TimeCanvasPoint;
-use Doctrine\Common\Persistence\ObjectManager;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use NumberFormatter;
 use Psr\Log\LoggerInterface;
 
 class FuelingBO
@@ -24,52 +25,45 @@ class FuelingBO
 
     /**
      * The entity manager
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     /**
      * DAO FuelType
      * @var FuelTypeRepository
      */
-    private $fuelTypeRepo;
-
-    /**
-     * DAO PartialFueling
-     * @var PartialFuelingRepository
-     */
-    private $partialFuelingRepo;
+    private FuelTypeRepository $fuelTypeRepo;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
-     * @var \NumberFormatter
+     * @var NumberFormatter
      */
-    private $numberFormatter;
+    private NumberFormatter $numberFormatter;
 
     /**
      * FuelingBO constructor.
-     * @param ObjectManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param FuelTypeRepository $fuelTypeRepo
      * @param LoggerInterface $logger
      */
-    public function __construct(ObjectManager $entityManager, FuelTypeRepository $fuelTypeRepo, LoggerInterface $logger, PartialFuelingRepository $partialFuelingRepo)
+    public function __construct(EntityManagerInterface $entityManager, FuelTypeRepository $fuelTypeRepo, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
         $this->fuelTypeRepo = $fuelTypeRepo;
-        $this->numberFormatter = new \NumberFormatter('fr_FR', \NumberFormatter::DECIMAL);
-        $this->partialFuelingRepo = $partialFuelingRepo;
+        $this->numberFormatter = new NumberFormatter('fr_FR', NumberFormatter::DECIMAL);
     }
 
     /**
      * Import from a file
      * @param string $filePath
      * @param Vehicle $vehicle
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function import(string $filePath, Vehicle $vehicle) {
         // Import du fichier
@@ -87,14 +81,14 @@ class FuelingBO
      * @param array $data
      * @param Vehicle $vehicle
      * @param boolean $flush
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function importRow(array $data, Vehicle $vehicle, $flush = false) {
         if (count($data) < 7 || count($data) > 8) {
             $this->logger->error("Bad CSV format!");
             return;
         }
-        $data[0] = \DateTime::createFromFormat('d/m/Y', $data[0]);
+        $data[0] = DateTime::createFromFormat('d/m/Y', $data[0]);
         $data[1] = $this->fuelTypeRepo->findByName($data[1]);
         for ($i = 2; $i < 7; $i++) {
             $data[$i] = $this->numberFormatter->parse($data[$i]);
@@ -103,7 +97,7 @@ class FuelingBO
                 return;
             }
         }
-        if (!$data[0] instanceof \DateTime) {
+        if (!$data[0] instanceof DateTime) {
             $this->logger->error("Bad date format!");
             return;
         }

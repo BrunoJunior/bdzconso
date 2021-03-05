@@ -47,6 +47,7 @@ class NumberType extends \Symfony\Component\Form\Extension\Core\Type\NumberType
             'divisor' => 1,
             'rounding_mode' => MoneyToLocalizedStringTransformer::ROUND_HALF_UP,
             'compound' => false,
+            'html5' => true,
         ));
 
         $resolver->setAllowedValues('rounding_mode', array(

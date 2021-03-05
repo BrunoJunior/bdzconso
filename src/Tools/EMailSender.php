@@ -12,22 +12,26 @@ use App\Entity\User;
 use Mailgun\Mailgun;
 use Mailgun\Model\Message\SendResponse;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class EMailSender
 {
     /**
      * @var Mailgun
      */
-    private $mailgun;
+    private Mailgun $mailgun;
 
     /**
      * @var Environment
      */
-    private $twig;
+    private Environment $twig;
 
     /**
      * EMailSender constructor.
      * @param Mailgun $mailgun
+     * @param Environment $twig
      */
     public function __construct(Mailgun $mailgun, Environment $twig)
     {
@@ -41,11 +45,11 @@ class EMailSender
      * @param string $template
      * @param array $params
      * @return SendResponse
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function send(User $to, string $template, array $params) {
+    public function send(User $to, string $template, array $params): SendResponse {
         return $this->mailgun->messages()->send('mb.bdesprez.com', [
             'from' => 'BdzConso <mailgun@bdesprez.com>',
             'to' => $to->getFirstname() . ' ' . $to->getLastname() . ' <' . $to->getEmail() . '>',
